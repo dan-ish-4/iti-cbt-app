@@ -3,6 +3,11 @@
   /* These styles are for the content *inside* the popup. */
   padding: 20px;
   text-align: center;
+  background-color: #fff; /* Added for modal background */
+  border-radius: 8px; /* Added for modal styling */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added for modal depth */
+  width: 90%; /* Added for modal width */
+  max-width: 400px; /* Added for modal max-width */
 }
 
 .login-box h2 {
@@ -96,4 +101,30 @@
 .social-btn i {
   margin-right: 10px;
   color: #EA4335;
+}
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0 0 0 / .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.login-error {
+    color: red;
+    margin: 10px 0;
+}
+.login-icon i {
+    font-size: 50px;
+    color: #1976d2;
+}
+.phone-input i, .social-btn i {
+    color: #ff9800;
+}
+.social-btn i {
+    color: #EA4335;
 }

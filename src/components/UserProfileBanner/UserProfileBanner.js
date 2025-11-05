@@ -1,41 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfileBanner.css';
+import { useAuth } from '../../context/AuthContext';
 
 const UserProfileBanner = () => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
+    const { backendUserId } = useAuth(); // Get the ID from context
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Hardcode a user ID for demonstration purposes.
-    // In a real app, this would come from a login context or local storage.
-    const userId = '1'; // Replace with a valid ID from the backend if possible
-
-    if (!userId) {
-      setUser({ name: 'Guest' }); // Handle guest user case
-      return;
-    }
-
-    // Fetch user profile data
-    fetch(`https://admin.online2study.in/api/user/${userId}/profile`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
+    useEffect(() => {
+        if (!backendUserId) { // Check if the ID exists
+            setUser({ name: 'Guest' });
+            return;
         }
-        return res.json();
-      })
-      .then(data => {
-        if (data.status && data.data) {
-          setUser(data.data);
-        } else {
-          throw new Error(data.message || 'Failed to fetch user data');
-        }
-      })
-      .catch(err => {
-        console.error("Failed to load user profile:", err);
-        setError('Could not load profile.');
-        setUser({ name: 'User' }); // Fallback user
-      });
-  }, []); // The empty array ensures this effect runs only once on mount
+
+        fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.status && data.data) {
+                    setUser(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch user data');
+                }
+            })
+            .catch(err => {
+                console.error("Failed to load user profile:", err);
+                setError('Could not load profile.');
+                setUser({ name: 'User' }); // Fallback user
+            });
+    }, [backendUserId]); // Re-run if the ID changes
 
   // Define language map to translate language_id to a name
   const languageMap = {

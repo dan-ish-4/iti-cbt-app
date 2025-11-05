@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import './PurchasedCourses.css';
 import PurchasedCourseCard from '../PurchasedCourseCard/PurchasedCourseCard';
+import { useAuth } from '../../context/AuthContext';
 
 const PurchasedCourses = () => {
-  const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+    const { backendUserId } = useAuth(); // Get the ID from context
+    const [courses, setCourses] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
 
-  useEffect(() => {
-    const userId = '1'; // Hardcode a user ID for demonstration
-
-    fetch(`https://admin.online2study.in/api/user/courses/${userId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status && Array.isArray(data.data)) {
-          setCourses(data.data);
+    useEffect(() => {
+        if (backendUserId) { // Check if the ID exists
+            fetch(`https://admin.online2study.in/api/user/courses/${backendUserId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status && Array.isArray(data.data)) {
+                        setCourses(data.data);
+                    } else {
+                        setCourses([]);
+                    }
+                    setIsLoading(false);
+                })
+                .catch(err => {
+                    console.error("Purchased Course Fetch Error:", err);
+                    setError("Error loading courses.");
+                    setIsLoading(false);
+                });
         } else {
-          // Handle cases where data is not an array or status is false
-          setCourses([]);
+            setIsLoading(false);
+            setCourses([]); // If no user, there are no purchased courses
         }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Purchased Course Fetch Error:", err);
-        setError("Error loading courses.");
-        setIsLoading(false);
-      });
-  }, []);
+    }, [backendUserId]); // Re-run if the ID changes
 
   const renderContent = () => {
     if (isLoading) {

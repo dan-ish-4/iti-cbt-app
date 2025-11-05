@@ -2,7 +2,7 @@ import React from 'react';
 import './ViewProfilePopup.css';
 import Popup from '../Popup/Popup';
 
-const ViewProfilePopup = ({ isOpen, onClose }) => {
+const ViewProfilePopup = ({ isOpen, onClose, onEditClick }) => {
   const profileImageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgujRjGkIBqKVMdoC2rgHg0OhXXnOSCgccz1SIieEQvQJZf3Z1LLLwYk8ffU0ZtHKFF_jrT1V6BgCBsY9RZx6s5WRyNOKjM8D4fJMo4VuqfIJjFs_9KvN2CxZdVVQvWXFBOeIQ7LkJ6v4BadMeu73km0RkYr88e1cBmjd5ZrUg84sVYIWyui6VPaNBlqmKJ/s320/profile.png";
 
   return (
@@ -19,7 +19,7 @@ const ViewProfilePopup = ({ isOpen, onClose }) => {
           <p><b>Category:</b> <span id='profile-category'>Electrician</span></p>
         </div>
         <div className='profile-footer'>
-          <button className='action-btn'>Edit Profile</button>
+          <button className='action-btn' onClick={onEditClick}>Edit Profile</button>
           <button className='action-btn danger'>Delete Profile</button>
         </div>
         <div className='privacy-links'>
