@@ -1,0 +1,74 @@
+.trade-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* --spacing-sm */
+}
+
+.trade-selector-wrapper {
+  position: relative; /* For positioning the dropdown content */
+}
+
+.trade__header {
+  display: flex;
+  align-items: center;
+  background-color: #0056b3; /* --color-primary-dark */
+  color: #fff; /* --color-white */
+  padding: 10px; /* --spacing-sm */
+  border-radius: 5px; /* --border-radius-sm */
+  cursor: pointer;
+  height: 40px;
+  width: 100%;
+}
+
+.trade__icon {
+  font-size: 20px;
+  margin-right: 10px; /* --spacing-sm */
+  min-width: 1.8em;
+  text-align: center;
+}
+
+.trade__title {
+  font-size: 18px; /* --font-size-lg */
+  flex-grow: 1;
+}
+
+.trade__dropdown-icon {
+  font-size: 18px; /* --font-size-lg */
+  transition: transform 0.3s ease; /* --transition-default */
+}
+
+.trade__dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.trade__content {
+  /* display is handled by React conditional rendering */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #f8f9fa; /* --color-background */
+  color: #2c3e50; /* --color-text-primary */
+  border-radius: 0 0 5px 5px; /* --border-radius-sm */
+  padding: 10px; /* --spacing-sm */
+  box-shadow: 0 4px 10px rgba(0,0,0,.08); /* --shadow-sm */
+  z-index: 10;
+}
+
+.trade__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Styles for list items will be added later */
+
+@media screen and (min-width: 769px) {
+  .trade-selection {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  .trade-selector-wrapper {
+    flex-grow: 1;
+  }
+}

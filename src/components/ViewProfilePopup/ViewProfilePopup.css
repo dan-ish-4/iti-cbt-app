@@ -1,0 +1,73 @@
+.view-profile-content {
+  color: #333;
+}
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.profile-avatar {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #007bff;
+  background-size: cover;
+  background-position: center;
+}
+.profile-email {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+}
+.profile-body {
+  margin-bottom: 20px;
+  text-align: center;
+}
+ .profile-body p {
+    margin-bottom: 8px;
+ }
+.profile-greeting {
+  font-size: 18px;
+  margin: 10px 0;
+  color: #333;
+}
+.profile-footer {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.action-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex: 1;
+}
+.action-btn:hover {
+  background: #0056b3;
+}
+.action-btn.danger {
+    background-color: #dc3545;
+}
+.action-btn.danger:hover {
+    background-color: #c82333;
+}
+.privacy-links {
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+}
+.privacy-link {
+  color: #007bff;
+  text-decoration: none;
+}
+.privacy-link:hover {
+  text-decoration: underline;
+}

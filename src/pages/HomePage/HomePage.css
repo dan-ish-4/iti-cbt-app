@@ -1,0 +1,5 @@
+.homepage-container {
+  padding: 15px;
+  /* Add vertical space for the fixed bottom nav */
+  padding-bottom: 80px;
+}

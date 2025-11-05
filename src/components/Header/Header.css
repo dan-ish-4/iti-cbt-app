@@ -1,0 +1,93 @@
+/* Header Navigation */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 15px;
+  border-radius: 0 0 20px 20px;
+  background: #357ae8;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  box-shadow: 0 2px 4px rgb(0 0 0 / .2);
+}
+.center-logo {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.logo-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  text-decoration: none;
+}
+.logo a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+.hamburger-menu button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+.right-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.language-btn {
+  width: 35px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #002bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgb(0 0 0 / .1);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.language-btn:hover {
+  background-color: #ffdf00;
+  transform: scale(1.1);
+}
+.language-btn i {
+  font-size: 20px;
+}
+.notification-btn {
+  width: 35px;
+  height: 30px;
+  position: relative;
+  font-size: 24px;
+  color: #fff;
+  cursor: pointer;
+}
+.notif-badge {
+  position: absolute;
+  top: -5px;
+  right: 4px;
+  background: red;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border-radius: 50%;
+  text-align: center;
+}

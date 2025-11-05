@@ -1,0 +1,88 @@
+.order-box {
+  /* The popup wrapper handles the outer box, this is for inner content */
+  padding: 10px;
+  background: #e0f0ff;
+  border-radius: 20px; /* To match the inner design */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.order-summary, .order-payment {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.order-summary h2, .order-payment h2 {
+  margin: 0 0 15px;
+  font-size: 20px;
+  color: #333;
+}
+.order-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.order-validity {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  background: #eaeaea;
+  border-radius: 4px;
+}
+.order-price {
+  display: flex;
+  text-align: right;
+}
+.order-old {
+  margin-right: 8px;
+  font-size: 14px;
+  color: #888;
+  text-decoration: line-through;
+}
+.order-final {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 5px 0;
+}
+.order-line {
+  display: flex;
+  padding: 6px 12px;
+  justify-content: space-between;
+  font-size: 15px;
+  margin: 6px 0;
+}
+.order-line.total {
+  font-weight: 700;
+  font-size: 16px;
+}
+.order-total {
+  color: #000;
+}
+.order-pay {
+  background: #f8f8ff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  text-decoration: none;
+  color: #000;
+}
+.order-pay img {
+  height: 28px;
+  margin-left: 10px;
+}

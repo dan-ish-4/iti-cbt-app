@@ -1,0 +1,26 @@
+.language-popup-content {
+  text-align: center;
+}
+.language-heading {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  font-size: 20px;
+}
+.language-select {
+  height: 40px;
+  width: 100%;
+  position: relative;
+  background: #007bff;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  -webkit-appearance: none; /* Removes default styling */
+  -moz-appearance: none;
+  appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}

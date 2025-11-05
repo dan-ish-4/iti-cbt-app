@@ -1,0 +1,45 @@
+/* Most styles are shared and can be defined in a common file later,
+   but for now we are keeping them separate for clarity. */
+.courses__section {
+  margin-bottom: 20px;
+}
+.courses-box {
+  width: 100%;
+  background: #e9e9e9; /* --color-background-alt */
+  padding: 15px;
+  border-radius: 15px;
+}
+.courses-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.courses-header h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #2c3e50;
+}
+.courses-header a {
+  color: #2196f3;
+  font-weight: 600;
+  text-decoration: none;
+}
+.courses-list-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px; /* --spacing-lg */
+   padding: 15px 0; /* Add padding for card shadows */
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.courses-list-container::-webkit-scrollbar {
+  display: none;
+}
+.status-message {
+    width: 100%;
+    text-align: center;
+    color: #555;
+    padding: 20px;
+}

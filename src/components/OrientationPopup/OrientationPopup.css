@@ -1,0 +1,42 @@
+.orientation-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.phone-animation {
+  width: 100px;
+  height: 200px;
+  background-color: #444;
+  border: 5px solid #ccc;
+  border-radius: 20px;
+  position: relative;
+  animation: rotatePhone 2s infinite alternate;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone-screen {
+  width: 80px;
+  height: 150px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+@keyframes rotatePhone {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}

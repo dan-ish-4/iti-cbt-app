@@ -1,0 +1,39 @@
+.trades-list-box {
+  max-height: 370px;
+  overflow: hidden;
+}
+.trades-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px; /* --spacing-lg */
+  margin-top: 15px;
+  max-height: 300px; /* (370px - padding) */
+  overflow-y: auto;
+}
+
+/* Shared styles from other sections */
+.courses__section {
+  margin-bottom: 20px;
+}
+.courses-box {
+  width: 100%;
+  background: #e9e9e9;
+  padding: 10px 15px;
+  border-radius: 15px;
+}
+.courses-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.courses-header h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #2c3e50;
+}
+.courses-header a {
+  color: #2196f3;
+  font-weight: 600;
+  text-decoration: none;
+}

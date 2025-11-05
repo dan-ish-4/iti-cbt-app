@@ -1,0 +1,79 @@
+.pur-box {
+  flex: 0 0 85%;
+  max-width: 320px;
+  scroll-snap-align: center;
+  padding: 20px 15px; /* --spacing-lg --spacing-md */
+  border-radius: 15px; /* --border-radius-lg */
+  background: #ffe5a1; /* --color-card-purchased-bg */
+  text-align: center;
+}
+
+.pur-top {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 280px;
+  background: #fff; /* --color-white */
+  border-radius: 15px; /* --border-radius-lg */
+  padding: 15px; /* --spacing-md */
+  gap: 15px; /* --spacing-md */
+  justify-content: flex-start;
+  margin: 0 auto 20px; /* --spacing-lg */
+}
+
+.pur-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: #fff; /* --color-white */
+  border-radius: 15px; /* --border-radius-lg */
+  font-size: 24px;
+}
+
+.pur-img img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.pur-details {
+  text-align: left;
+}
+.pur-details h3 {
+  margin: 0;
+  font-size: 18px; /* --font-size-lg */
+  font-weight: 700; /* --font-weight-bold */
+  color: #333; /* --color-dark */
+}
+.pur-details p {
+  margin: 3px 0;
+  font-size: 14px; /* --font-size-sm */
+  color: #444; /* --color-gray */
+}
+
+.pur-actions {
+  display: flex;
+  gap: 10px; /* --spacing-sm */
+  justify-content: space-between;
+}
+
+.pur-btn {
+  flex: 1;
+  padding: 10px; /* --spacing-sm */
+  font-size: 14px; /* --font-size-sm */
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pur-btn-upgrade {
+  background: #f89c1c; /* --color-btn-upgrade-bg */
+}
+
+.pur-btn-enroll {
+  background: #002c64; /* --color-btn-enroll-bg */
+}

@@ -1,0 +1,99 @@
+.login-box {
+  /* The popup wrapper handles background and centering. */
+  /* These styles are for the content *inside* the popup. */
+  padding: 20px;
+  text-align: center;
+}
+
+.login-box h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #000;
+}
+
+.login-icon {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.phone-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.phone-input {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / .2);
+  margin: 0 auto 15px;
+  border: 1px solid #ccc;
+}
+
+.phone-input input {
+  padding: 0;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  color: #555;
+  margin-left: 10px;
+}
+
+.continue-btn {
+  background-color: #2196f3;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+}
+
+.continue-btn:hover {
+  background-color: #1976d2;
+}
+
+.separator {
+  margin: 20px 0;
+  font-weight: 700;
+  color: #666;
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color .3s;
+  background: #fff;
+}
+
+.social-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.social-btn i {
+  margin-right: 10px;
+  color: #EA4335;
+}
