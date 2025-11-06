@@ -1,7 +1,8 @@
 import React from 'react';
 import './SlideOutMenu.css';
+import LogoutButton from '../LogoutButton/LogoutButton';
 
-const SlideOutMenu = ({ isOpen, toggleMenu }) => {
+const SlideOutMenu = ({ isOpen, toggleMenu, onLogoutSuccess }) => {
   return (
     <>
       <div className={isOpen ? 'slide-menu active' : 'slide-menu'} id='slide-menu'>
@@ -22,7 +23,7 @@ const SlideOutMenu = ({ isOpen, toggleMenu }) => {
           <li><a href='/terms'><i className='fas fa-file-contract'></i> Terms and Conditions</a></li>
           <li><a href='/about'><i className='fas fa-info-circle'></i> About us</a></li>
           <li><a href='/contact'><i className='fas fa-phone-alt'></i> Contact us</a></li>
-          <li id='logoutBtn'><i className='fas fa-sign-out-alt'></i> Log out</li>
+          <LogoutButton onLogoutSuccess={onLogoutSuccess} />
         </ul>
       </div>
       {/* Overlay */}

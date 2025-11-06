@@ -14,6 +14,25 @@ export function AuthProvider({ children }) {
   const [isProfileComplete, setProfileComplete] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // --- NEW: Fetch CSRF token on initial app load ---
+  useEffect(() => {
+    // This function will be called once when the app starts.
+    // It requests a CSRF cookie from the Laravel backend.
+    const getCsrfToken = async () => {
+      try {
+        // Use 'include' so the browser can set the XSRF-TOKEN cookie
+        await fetch('https://admin.online2study.in/sanctum/csrf-cookie', {
+            credentials: 'include'
+        });
+        console.log("CSRF cookie should be set.");
+      } catch (error) {
+        console.error('Could not fetch CSRF token:', error);
+      }
+    };
+
+    getCsrfToken();
+  }, []); // Empty dependency array ensures it runs only once.
+
   function updateProfileStatus(isComplete) {
     setProfileComplete(isComplete);
     localStorage.setItem("userProfileCompleted", isComplete ? "true" : "false");

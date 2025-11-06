@@ -31,6 +31,11 @@ function App() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleViewProfilePopup = () => setViewProfilePopupOpen(!isViewProfilePopupOpen);
 
+  const handleLogoutSuccess = () => {
+    // Redirect to login or update UI
+    window.location.reload(); // This will force a re-render and re-evaluation of auth state
+  };
+
   // This function handles the transition
   const openUpdateProfilePopup = () => {
     setViewProfilePopupOpen(false); // Close the view popup
@@ -65,7 +70,7 @@ function App() {
     <Router>
       <div className="App">
         <Header toggleMenu={toggleMenu} onLanguageClick={toggleLanguagePopup} />
-        <SlideOutMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        <SlideOutMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} onLogoutSuccess={handleLogoutSuccess} />
 
         <main className="main-content">
           <Routes>

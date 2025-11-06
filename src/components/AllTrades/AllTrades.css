@@ -37,3 +37,9 @@
   font-weight: 600;
   text-decoration: none;
 }
+.status-message {
+    width: 100%;
+    text-align: center;
+    color: #555;
+    padding: 20px;
+}

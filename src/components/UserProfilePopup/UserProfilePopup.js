@@ -53,8 +53,38 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
     setLanguages(Object.entries(languageMap).map(([name, id]) => ({ id, name })));
   }, [backendUserId]);
 
-  const fetchCategories = (languageId) => { /* ... no changes ... */ };
-  const handleInputChange = (e) => { /* ... no changes ... */ };
+  const fetchCategories = async (languageId) => {
+    if (!languageId) {
+      setCategories([]);
+      return;
+    }
+    try {
+      const response = await fetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch categories for language ID: ${languageId}`);
+      }
+      const data = await response.json();
+      if (data.status && data.data) {
+        setCategories(data.data);
+      } else {
+        setCategories([]);
+      }
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+      setCategories([]);
+      setError("Failed to load categories.");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === "languageId") {
+      fetchCategories(value);
+      setFormData(prev => ({ ...prev, categoryId: '' })); // Reset category when language changes
+    }
+  };
+
   const handleImageChange = (e) => { /* ... no changes ... */ };
 
   const handleSubmit = async (e) => {
@@ -115,16 +145,54 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
   };
 
   return (
-    <div className='login-container'>
-      <Spinner isLoading={loading} />
-      <div className='login-box scrollable-popup'>
-        <form onSubmit={handleSubmit}>
-          <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
-          {/* ... The rest of the JSX form is unchanged ... */}
-        </form>
+      <div className='login-container'>
+        <Spinner isLoading={loading} />
+        <div className='login-box scrollable-popup'>
+          {/* FIX: The full form structure is restored here */}
+          <form onSubmit={handleSubmit}>
+            <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
+            
+            <label htmlFor="imageInput" className='profile-image-container'>
+              <img alt='User' src={formData.profileImageUrl} />
+              <div className='upload-icon'>+</div>
+            </label>
+            <input accept='image/*' id='imageInput' type='file' style={{ display: 'none' }} onChange={handleImageChange} />
+            
+            <div className='profile-form'>
+              {error && <p className="form-error">{error}</p>}
+              
+              <label className='form-label'>User Name</label>
+              <div className='form-input-group'>
+                <input name="name" value={formData.name} onChange={handleInputChange} placeholder='Enter Your Name' type='text' />
+              </div>
+
+              <label className='form-label'>Mobile Number</label>
+              <div className='form-input-group'>
+                <input name="mobile" value={formData.mobile} onChange={handleInputChange} placeholder='Enter Mobile Number' type='text' />
+              </div>
+
+              <label className='form-label'>Select Your Language</label>
+              <select name="languageId" value={formData.languageId} onChange={handleInputChange} className='form-dropdown'>
+                <option value="" disabled>-- Select Language --</option>
+                {languages.map(lang => <option key={lang.id} value={lang.id}>{lang.name}</option>)}
+              </select>
+
+              <label className='form-label'>Select Your Trade</label>
+              <select name="categoryId" value={formData.categoryId} onChange={handleInputChange} className='form-dropdown' disabled={!formData.languageId || categories.length === 0}>
+                 <option value="" disabled>-- Select Trade --</option>
+                 {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+              </select>
+              
+              <div id='profileButtons'>
+                <button type="submit" className='continue-btn' disabled={loading}>
+                  {isUpdateMode ? 'Update' : 'Continue'}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 export default UserProfilePopup;

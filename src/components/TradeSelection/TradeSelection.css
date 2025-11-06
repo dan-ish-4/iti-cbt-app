@@ -72,3 +72,19 @@
     flex-grow: 1;
   }
 }
+.trade__list {
+    max-height: 200px; /* Prevent very long lists */
+    overflow-y: auto;
+}
+
+.trade__item {
+  padding: 8px 12px; /* --spacing-xs --spacing-sm */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* --transition-default */
+  border-radius: 5px; /* --border-radius-sm */
+}
+
+.trade__item:hover {
+  background-color: #ffd54f; /* --color-secondary */
+  color: #2c3e50; /* --color-text-primary */
+}

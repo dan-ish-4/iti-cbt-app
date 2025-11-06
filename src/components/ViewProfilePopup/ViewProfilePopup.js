@@ -1,23 +1,43 @@
 import React from 'react';
 import './ViewProfilePopup.css';
 import Popup from '../Popup/Popup';
+import { useUserProfile } from '../../hooks/useUserProfile'; // Import the new hook
 
 const ViewProfilePopup = ({ isOpen, onClose, onEditClick }) => {
-  const profileImageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgujRjGkIBqKVMdoC2rgHg0OhXXnOSCgccz1SIieEQvQJZf3Z1LLLwYk8ffU0ZtHKFF_jrT1V6BgCBsY9RZx6s5WRyNOKjM8D4fJMo4VuqfIJjFs_9KvN2CxZdVVQvWXFBOeIQ7LkJ6v4BadMeu73km0RkYr88e1cBmjd5ZrUg84sVYIWyui6VPaNBlqmKJ/s320/profile.png";
+  // Use the hook to get all profile data and the loading state
+  const { profile, imageUrl, languageName, categoryName, loading, error } = useUserProfile();
+
+  const renderContent = () => {
+    if (loading) {
+      return <p>Loading Profile...</p>;
+    }
+    if (error) {
+      return <p>Error: {error}</p>;
+    }
+    if (!profile) {
+      return <p>No profile data found.</p>;
+    }
+
+    return (
+      <>
+        <div className='profile-header'>
+          <div className='profile-avatar' style={{ backgroundImage: `url(${imageUrl})` }} />
+          <p className='profile-email'>{profile.email || 'No Email'}</p>
+        </div>
+        <div className='profile-body'>
+          <h3 className='profile-greeting'>Hi, {profile.name || 'User'}!</h3>
+          <p><b>Phone:</b> <span>{profile.phone_number || '-'}</span></p>
+          <p><b>Language:</b> <span>{languageName}</span></p>
+          <p><b>Category:</b> <span>{categoryName}</span></p>
+        </div>
+      </>
+    );
+  };
 
   return (
     <Popup isOpen={isOpen} onClose={onClose}>
       <div className='view-profile-content'>
-        <div className='profile-header'>
-          <div className='profile-avatar' style={{ backgroundImage: `url(${profileImageUrl})` }} />
-          <p className='profile-email'>user@example.com</p>
-        </div>
-        <div className='profile-body'>
-          <h3 className='profile-greeting'>Hi, User!</h3>
-          <p><b>Phone:</b> <span id='profile-phone'>+91 1234567890</span></p>
-          <p><b>Language:</b> <span id='profile-language'>Hindi</span></p>
-          <p><b>Category:</b> <span id='profile-category'>Electrician</span></p>
-        </div>
+        {renderContent()}
         <div className='profile-footer'>
           <button className='action-btn' onClick={onEditClick}>Edit Profile</button>
           <button className='action-btn danger'>Delete Profile</button>
