@@ -81,7 +81,7 @@ const CourseDashboard = ({
             <span className={styles.btnText}>Learning Videos</span>
           </a>
 
-          <alink 
+          <a
             href={questionBankHref}
             className={styles.dashboardBtn}
             style={{ '--i': 4 }}

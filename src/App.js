@@ -11,6 +11,8 @@ import ScorePage from './pages/ScorePage/ScorePage';
 import WalletPage from './pages/WalletPage/WalletPage';
 import CourseDashboard from './components/CourseDashboard/CourseDashboard';
 import LearningVideosPage from './pages/LearningVideosPage/LearningVideosPage';
+import CbtMockTestPage from './pages/CbtMockTestPage/CbtMockTestPage';
+import ProgressDashboardPage from './pages/ProgressDashboardPage/ProgressDashboardPage';
 
 // Standalone Views / Popups
 import LoginPopup from './components/LoginPopup/LoginPopup';
@@ -91,8 +93,8 @@ function App() {
                   learningVideosHref="/learning-videos"
                   questionBankHref="question-bank.html"
                   practiceQuizHref="practice-quiz.html"
-                  cbtMockTestHref="mock-test.html"
-                  progressHref="progress.html"
+                  cbtMockTestHref="/cbt-mock-test"
+                  progressHref="/progress-dashboard"
                   onStudyMaterialClick={() => alert('Opening Study Material...')}
                   onPreviousYearPaperClick={() => alert('Opening Previous Year Papers...')}
                   onSupportClick={() => alert('Contacting Support...')}
@@ -100,6 +102,8 @@ function App() {
               }
             />
             <Route path="/learning-videos" element={<LearningVideosPage />} />
+            <Route path="/cbt-mock-test" element={<CbtMockTestPage />} />
+            <Route path="/progress-dashboard" element={<ProgressDashboardPage />} />
           </Routes>
         </main>
 
