@@ -9,6 +9,28 @@
     box-shadow: 0 4px 8px rgb(0 0 0 / .2); width: 90%; max-width: 400px;
     text-align: center; position: relative;
 }
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.popup-header h2 {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  padding: 0 5px;
+}
+.close-button:hover {
+  color: #000;
+}
 .scrollable-popup {
     max-height: 95vh;
     overflow-y: auto;
@@ -35,8 +57,8 @@
   cursor: pointer;
 }
 .profile-image-container img {
-  width: 100%;
-  height: 100%;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
   object-fit: cover;
 }

@@ -203,7 +203,10 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
       <Spinner isLoading={loading} />
       <div className='login-box scrollable-popup'>
         <form onSubmit={handleSubmit} noValidate>
-          <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
+          <div className='popup-header'>
+            <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
+            <button type="button" className='close-button' onClick={onClose}>X</button>
+          </div>
           
           <label htmlFor="imageInput" className='profile-image-container'>
             <img alt='User Profile' src={formData.profileImageUrl} />
@@ -237,7 +240,6 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
             </select>
             
             <div id='profileButtons'>
-              <button type="button" className='close-btn-form' onClick={onClose}>Cancel</button>
               <button type="submit" className='continue-btn' disabled={loading}>
                 {isUpdateMode ? 'Update' : 'Continue'}
               </button>
