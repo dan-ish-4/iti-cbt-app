@@ -9,7 +9,8 @@ import SlideOutMenu from './components/SlideOutMenu/SlideOutMenu';
 import HomePage from './pages/HomePage/HomePage';
 import ScorePage from './pages/ScorePage/ScorePage';
 import WalletPage from './pages/WalletPage/WalletPage';
-import CourseDashboardPage from './pages/CourseDashboardPage/CourseDashboardPage';
+import CourseDashboard from './components/CourseDashboard/CourseDashboard';
+import LearningVideosPage from './pages/LearningVideosPage/LearningVideosPage';
 
 // Standalone Views / Popups
 import LoginPopup from './components/LoginPopup/LoginPopup';
@@ -77,7 +78,28 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/practice" element={<ScorePage />} />
             <Route path="/wallet" element={<WalletPage />} />
-            <Route path="/p/course-dashboard.html" element={<CourseDashboardPage />} />
+            <Route
+              path="/p/course-dashboard.html"
+              element={
+                <CourseDashboard
+                  courseName="Eelctrical"
+                  instructor="jagdeep singh"
+                  enrollmentStatus="Enrolled"
+                  profileImageUrl="https://randomuser.me/api/portraits/men/44.jpg"
+                  onSyllabusClick={() => alert('Opening Syllabus...')}
+                  onAnnouncementClick={() => alert('Showing Announcements...')}
+                  learningVideosHref="/learning-videos"
+                  questionBankHref="question-bank.html"
+                  practiceQuizHref="practice-quiz.html"
+                  cbtMockTestHref="mock-test.html"
+                  progressHref="progress.html"
+                  onStudyMaterialClick={() => alert('Opening Study Material...')}
+                  onPreviousYearPaperClick={() => alert('Opening Previous Year Papers...')}
+                  onSupportClick={() => alert('Contacting Support...')}
+                />
+              }
+            />
+            <Route path="/learning-videos" element={<LearningVideosPage />} />
           </Routes>
         </main>
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfilePopup.css';
-import Popup from '../Popup/Popup';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../Spinner/Spinner';
 
@@ -9,7 +8,7 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
-    languageId: '',
+    languageId: '2',
     categoryId: '',
     profileImage: null,
     profileImageUrl: "https://cdn-icons-png.flaticon.com/512/847/847969.png"
@@ -19,39 +18,12 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (backendUserId) {
-      fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status && data.data) {
-            const user = data.data;
-            
-            // FIX: Check if the image path is already a full URL or null
-            let imageUrl = formData.profileImageUrl; // Default
-            if (user.profile_image) {
-              if (user.profile_image.startsWith('http')) {
-                imageUrl = user.profile_image; // It's already a full URL
-              } else {
-                imageUrl = `https://admin.online2study.in/storage/${user.profile_image}`; // Prepend base path
-              }
-            }
+  const languageMap = { "English": 1, "Hindi": 2, "Marathi": 3, "Bengali": 4, "Tamil": 5, "Telugu": 6, "Gujarati": 7, "Punjabi": 8 };
 
-            setFormData(prev => ({
-              ...prev,
-              name: user.name || '',
-              mobile: user.phone_number || '',
-              languageId: user.language_id || '2',
-              categoryId: user.category_id || '',
-              profileImageUrl: imageUrl
-            }));
-            if(user.language_id) fetchCategories(user.language_id);
-          }
-        });
-    }
-    const languageMap = { "English": 1, "Hindi": 2, "Marathi": 3, "Bengali": 4, "Tamil": 5, "Telugu": 6, "Gujarati": 7, "Punjabi": 8 };
-    setLanguages(Object.entries(languageMap).map(([name, id]) => ({ id, name })));
-  }, [backendUserId]);
+  const getCsrfToken = () => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
+    return token ? decodeURIComponent(token.split('=')[1]) : null;
+  };
 
   const fetchCategories = async (languageId) => {
     if (!languageId) {
@@ -61,31 +33,90 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
     try {
       const response = await fetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
       if (!response.ok) {
-        throw new Error(`Failed to fetch categories for language ID: ${languageId}`);
+        throw new Error(`Failed to fetch categories`);
       }
       const data = await response.json();
-      if (data.status && data.data) {
+      if (data.success && data.data) {
         setCategories(data.data);
       } else {
         setCategories([]);
       }
     } catch (err) {
       console.error("Error fetching categories:", err);
+      setError("Failed to load trade categories.");
       setCategories([]);
-      setError("Failed to load categories.");
     }
   };
+
+  useEffect(() => {
+    setLanguages(Object.entries(languageMap).map(([name, id]) => ({ id, name })));
+
+    if (backendUserId && isOpen) {
+      setLoading(true);
+      fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status && data.data) {
+            const user = data.data;
+            let imageUrl = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+            if (user.profile_image && user.profile_image !== "string") {
+              imageUrl = user.profile_image.startsWith("http")
+                ? user.profile_image
+                : `https://admin.online2study.in/storage/${user.profile_image}`;
+            }
+
+            const userLangId = user.language_id || '2';
+            const userCategoryId = user.category_id || '';
+
+            setFormData(prev => ({
+              ...prev,
+              name: user.name || '',
+              mobile: user.phone_number || '',
+              languageId: userLangId,
+              categoryId: userCategoryId,
+              profileImageUrl: imageUrl,
+              profileImage: null
+            }));
+
+            fetchCategories(userLangId);
+            if (userCategoryId) {
+                setFormData(prev => ({ ...prev, categoryId: userCategoryId }));
+            }
+          }
+        })
+        .catch(err => {
+          console.error("Error fetching user profile:", err);
+          setError("Failed to load user profile.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [backendUserId, isOpen]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (name === "languageId") {
+      setFormData(prev => ({ ...prev, categoryId: '' }));
       fetchCategories(value);
-      setFormData(prev => ({ ...prev, categoryId: '' })); // Reset category when language changes
     }
   };
 
-  const handleImageChange = (e) => { /* ... no changes ... */ };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setFormData(prev => ({
+          ...prev,
+          profileImage: file,
+          profileImageUrl: event.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,103 +127,126 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
     setLoading(true);
     setError('');
 
-    const apiFormData = new FormData();
-    apiFormData.append("name", formData.name);
-    apiFormData.append("phone_number", formData.mobile);
-    apiFormData.append("language_id", formData.languageId);
-    apiFormData.append("category_id", formData.categoryId);
-    apiFormData.append("login_type", "google");
-    if (formData.profileImage) {
-      apiFormData.append("profile_image", formData.profileImage);
+    const csrfToken = getCsrfToken();
+    if (!csrfToken) {
+      setError("CSRF token not found. Please refresh the page.");
+      setLoading(false);
+      return;
     }
+
+    const dataToSend = new FormData();
+    dataToSend.append("name", formData.name);
+    dataToSend.append("phone_number", formData.mobile);
+    dataToSend.append("language_id", formData.languageId);
+    dataToSend.append("category_id", formData.categoryId);
+    dataToSend.append("login_type", "google");
+
+    if (formData.profileImage) {
+      dataToSend.append("profile_image", formData.profileImage);
+    } else {
+      dataToSend.append("profile_image", formData.profileImageUrl);
+    }
+    
+    // Note: Laravel can't handle PUT with FormData, so we use POST and spoof the method.
+    dataToSend.append("_method", "POST");
+
 
     try {
       const response = await fetch(`https://admin.online2study.in/api/user/${backendUserId}/update`, {
-        method: "POST",
-        credentials: 'include',
+        method: 'POST',
         headers: {
-          // FIX: Add 'Accept' header to tell the server we expect a JSON response.
-          // This is crucial for many PHP/Laravel backends to correctly handle API sessions.
           'Accept': 'application/json',
+          'X-XSRF-TOKEN': csrfToken
         },
-        body: apiFormData
+        body: dataToSend,
+        credentials: 'include'
       });
 
-      if (!response.ok) {
-        // If we get a non-JSON error page (like a 419 HTML page), this will now fail gracefully.
-        if (response.headers.get("content-type")?.indexOf("application/json") === -1) {
-             throw new Error(`Server returned a non-JSON response. Status: ${response.status}`);
-        }
-        const errorResult = await response.json();
-        throw new Error(errorResult.message || `Request failed with status ${response.status}`);
-      }
-      
       const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+      }
 
       if (!result.status) {
         throw new Error(result.message || "Failed to update profile.");
       }
 
-      updateProfileStatus(true);
-      if (isUpdateMode) {
-          onClose();
+      alert("Profile updated successfully.");
+
+      localStorage.setItem("userProfileCompleted", "true");
+      localStorage.setItem("userName", formData.name);
+      localStorage.setItem("userMobile", formData.mobile);
+      localStorage.setItem("userLang", String(formData.languageId));
+      localStorage.setItem("userTrade", String(formData.categoryId));
+
+      if (typeof updateProfileStatus === 'function') {
+        updateProfileStatus(true);
       }
+      
+      onClose();
+
     } catch (err) {
+      console.error("Update failed:", err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
-      <div className='login-container'>
-        <Spinner isLoading={loading} />
-        <div className='login-box scrollable-popup'>
-          {/* FIX: The full form structure is restored here */}
-          <form onSubmit={handleSubmit}>
-            <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
+    <div className='login-container'>
+      <Spinner isLoading={loading} />
+      <div className='login-box scrollable-popup'>
+        <form onSubmit={handleSubmit} noValidate>
+          <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
+          
+          <label htmlFor="imageInput" className='profile-image-container'>
+            <img alt='User Profile' src={formData.profileImageUrl} />
+            <div className='upload-icon'>+</div>
+          </label>
+          <input accept='image/*' id='imageInput' type='file' style={{ display: 'none' }} onChange={handleImageChange} />
+          
+          <div className='profile-form'>
+            {error && <p className="form-error">{error}</p>}
             
-            <label htmlFor="imageInput" className='profile-image-container'>
-              <img alt='User' src={formData.profileImageUrl} />
-              <div className='upload-icon'>+</div>
-            </label>
-            <input accept='image/*' id='imageInput' type='file' style={{ display: 'none' }} onChange={handleImageChange} />
-            
-            <div className='profile-form'>
-              {error && <p className="form-error">{error}</p>}
-              
-              <label className='form-label'>User Name</label>
-              <div className='form-input-group'>
-                <input name="name" value={formData.name} onChange={handleInputChange} placeholder='Enter Your Name' type='text' />
-              </div>
-
-              <label className='form-label'>Mobile Number</label>
-              <div className='form-input-group'>
-                <input name="mobile" value={formData.mobile} onChange={handleInputChange} placeholder='Enter Mobile Number' type='text' />
-              </div>
-
-              <label className='form-label'>Select Your Language</label>
-              <select name="languageId" value={formData.languageId} onChange={handleInputChange} className='form-dropdown'>
-                <option value="" disabled>-- Select Language --</option>
-                {languages.map(lang => <option key={lang.id} value={lang.id}>{lang.name}</option>)}
-              </select>
-
-              <label className='form-label'>Select Your Trade</label>
-              <select name="categoryId" value={formData.categoryId} onChange={handleInputChange} className='form-dropdown' disabled={!formData.languageId || categories.length === 0}>
-                 <option value="" disabled>-- Select Trade --</option>
-                 {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-              </select>
-              
-              <div id='profileButtons'>
-                <button type="submit" className='continue-btn' disabled={loading}>
-                  {isUpdateMode ? 'Update' : 'Continue'}
-                </button>
-              </div>
+            <label className='form-label'>User Name</label>
+            <div className='form-input-group'>
+              <input name="name" value={formData.name} onChange={handleInputChange} placeholder='Enter Your Name' type='text' required />
             </div>
-          </form>
-        </div>
+
+            <label className='form-label'>Mobile Number</label>
+            <div className='form-input-group'>
+              <input name="mobile" value={formData.mobile} onChange={handleInputChange} placeholder='Enter Mobile Number' type='tel' required />
+            </div>
+
+            <label className='form-label'>Select Your Language</label>
+            <select name="languageId" value={formData.languageId} onChange={handleInputChange} className='form-dropdown' required>
+              <option value="" disabled>-- Select Language --</option>
+              {languages.map(lang => <option key={lang.id} value={lang.id}>{lang.name}</option>)}
+            </select>
+
+            <label className='form-label'>Select Your Trade</label>
+            <select name="categoryId" value={formData.categoryId} onChange={handleInputChange} className='form-dropdown' disabled={!formData.languageId || categories.length === 0} required>
+               <option value="" disabled>{!formData.languageId ? '-- Select a language first --' : (categories.length === 0 ? '-- No trades available --' : '-- Select Trade --')}</option>
+               {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+            </select>
+            
+            <div id='profileButtons'>
+              <button type="button" className='close-btn-form' onClick={onClose}>Cancel</button>
+              <button type="submit" className='continue-btn' disabled={loading}>
+                {isUpdateMode ? 'Update' : 'Continue'}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default UserProfilePopup;

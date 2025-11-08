@@ -1,0 +1,40 @@
+:root {
+    --primary-color: #26A69A;
+    --primary-dark: #00796B;
+    --accent-color: #FFC107;
+    --bg-color: #f4f4f9;
+    --card-bg: #ffffff;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --border-color: #e0e0e0;
+}
+.learningPageContainer{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+.learningPageHeader{background-color:#007bff;color:white;padding:15px 20px;font-size:20px;font-weight:600;border-radius:12px;margin:20px 10px 0;}
+.card{background-color:var(--card-bg);padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0, 0, 0, 0.05);margin:15px 10px;}
+.progressCardHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;font-size:18px;font-weight:600;color:var(--text-dark);}
+.filterButton{background-color:transparent;border:1px solid #007bff;color:#007bff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.3s ease;}
+.filterButton:hover{background-color:#007bff;color:white;}
+.filterButton .fa-filter{margin-right:6px;}
+.progressCardBody{display:flex;flex-direction:column;align-items:center;gap:25px;}
+.progressChartWrapper{width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--accent-color) 0% 50%, #007bff 50% 100%);position:relative;}
+.chartInnerCircle{width:100px;height:100px;background-color:var(--card-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--text-dark);}
+.videoStatsContainer{flex-grow:1;width:100%;display:flex;flex-direction:column;gap:12px;font-size:16px;}
+.statItem{display:flex;justify-content:space-between;align-items:center;}
+.statValue{font-weight:600;padding:6px 18px;border-radius:8px;color:#fff;min-width:70px;text-align:center;}
+.statTotal{background-color:#0056b3;}
+.statWatched{background-color:var(--accent-color);color:var(--text-dark);}
+.subjectsListHeader{font-size:18px;font-weight:600;color:var(--text-dark);margin-bottom:20px;}
+.subjectsListCard{display:flex;flex-direction:column;gap:15px;}
+.subjectCard{display:flex;align-items:center;gap:15px;background-color:#fdfdfd;padding:15px;border-radius:10px;border:1px solid #eee;transition:transform 0.2s ease, box-shadow 0.2s ease;}
+.subjectCard:hover{transform:translateY(-3px);box-shadow:0 6px 15px rgba(0, 0, 0, 0.08);}
+.subjectIcon{width:55px;height:55px;background-color:#e0e0e0;border-radius:10px;flex-shrink:0;}
+.subjectInfo{flex-grow:1;}
+.subjectTitle{font-size:17px;font-weight:600;margin-bottom:6px;color:var(--text-dark);}
+.subjectDetails{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--text-light);}
+@media (min-width: 768px){
+    .learningPageHeader{margin:20px 20px 0;}
+    .card{margin:20px;}
+    .progressCardBody{flex-direction:row;}
+    .videoStatsContainer{padding-left:20px;}
+    .subjectTitle{font-size:18px;}
+}
