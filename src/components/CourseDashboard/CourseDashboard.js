@@ -42,11 +42,11 @@ const CourseDashboard = ({
                 alt={`${instructor}'s profile`} 
                 className={styles.profileImg} 
               />
-              <span>{instructor}</span>
+                <span>{instructor}</span>
+              </div>
+              <span className={styles.enrollmentStatus}>{enrollmentStatus}</span>
             </div>
-            <span className={styles.enrollmentStatus}>{enrollmentStatus}</span>
-          </div>
-        </section>
+          </section>
 
         {/* Dashboard Buttons Grid */}
         <section className={styles.dashboardGrid}>
@@ -81,11 +81,7 @@ const CourseDashboard = ({
             <span className={styles.btnText}>Learning Videos</span>
           </a>
 
-<<<<<<< Updated upstream
           <a
-=======
-          <a 
->>>>>>> Stashed changes
             href={questionBankHref}
             className={styles.dashboardBtn}
             style={{ '--i': 4 }}

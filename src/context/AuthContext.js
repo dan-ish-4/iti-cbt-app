@@ -14,25 +14,6 @@ export function AuthProvider({ children }) {
   const [isProfileComplete, setProfileComplete] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // --- NEW: Fetch CSRF token on initial app load ---
-  useEffect(() => {
-    // This function will be called once when the app starts.
-    // It requests a CSRF cookie from the Laravel backend.
-    const getCsrfToken = async () => {
-      try {
-        // Use 'include' so the browser can set the XSRF-TOKEN cookie
-        await fetch('https://admin.online2study.in/sanctum/csrf-cookie', {
-            credentials: 'include'
-        });
-        console.log("CSRF cookie should be set.");
-      } catch (error) {
-        console.error('Could not fetch CSRF token:', error);
-      }
-    };
-
-    getCsrfToken();
-  }, []); // Empty dependency array ensures it runs only once.
-
   function updateProfileStatus(isComplete) {
     setProfileComplete(isComplete);
     localStorage.setItem("userProfileCompleted", isComplete ? "true" : "false");
@@ -45,6 +26,7 @@ export function AuthProvider({ children }) {
       const sessionResponse = await fetch('https://admin.online2study.in/login.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'omit',
         body: JSON.stringify({
           uid: firebaseUser.uid,
           email: firebaseUser.email,
@@ -66,7 +48,10 @@ export function AuthProvider({ children }) {
       setBackendUserId(sessionData.id);
 
       // Step 2: Use the new backend userId to fetch the user's profile
-      const profileResponse = await fetch(`https://admin.online2study.in/api/user/${sessionData.id}/profile`);
+      const profileResponse = await fetch(
+        `https://admin.online2study.in/api/user/${sessionData.id}/profile`,
+        { credentials: 'omit' }
+      );
       const profileData = await profileResponse.json();
 
       if (!profileData.status || !profileData.data) {
@@ -103,6 +88,7 @@ export function AuthProvider({ children }) {
       fetch('https://admin.online2study.in/logout.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'omit',
         body: JSON.stringify({ session_id: sessionId })
       }).catch(err => console.error("Backend logout error:", err));
     }
