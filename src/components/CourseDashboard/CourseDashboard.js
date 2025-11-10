@@ -81,7 +81,11 @@ const CourseDashboard = ({
             <span className={styles.btnText}>Learning Videos</span>
           </a>
 
+<<<<<<< Updated upstream
           <a
+=======
+          <a 
+>>>>>>> Stashed changes
             href={questionBankHref}
             className={styles.dashboardBtn}
             style={{ '--i': 4 }}

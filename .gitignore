@@ -23,3 +23,11 @@ yarn-debug.log*
 yarn-error.log*
 *.zip
 *.bat
+<<<<<<< Updated upstream
+=======
+package-lock.json
+package.json
+>>>>>>> Stashed changes
+package.json
+package-lock.json
+package-lock.json
