@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './TradeSelection.css';
 import { useAuth } from '../../context/AuthContext'; // Import useAuth to get the user ID
+import { backendFetch } from '../../utils/backendFetch';
 
 const TradeSelection = () => {
   const { backendUserId } = useAuth();
@@ -22,7 +23,7 @@ const TradeSelection = () => {
 
     // Fetch user's profile to set the initial language and trade
     if (backendUserId) {
-      fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+      backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
         .then(res => res.json())
         .then(data => {
           if (data.status && data.data) {
@@ -42,7 +43,7 @@ const TradeSelection = () => {
 
     setLoading(true);
     setSelectedTrade({ id: null, name: 'Loading Trades...' }); // Show loading state
-    fetch(`https://admin.online2study.in/api/get-categories/${selectedLanguage.id}`)
+    backendFetch(`https://admin.online2study.in/api/get-categories/${selectedLanguage.id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

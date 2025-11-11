@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { backendFetch, getSessionId } from '../utils/backendFetch';
 
 const AuthContext = React.createContext();
 
@@ -48,9 +49,8 @@ export function AuthProvider({ children }) {
       setBackendUserId(sessionData.id);
 
       // Step 2: Use the new backend userId to fetch the user's profile
-      const profileResponse = await fetch(
-        `https://admin.online2study.in/api/user/${sessionData.id}/profile`,
-        { credentials: 'omit' }
+      const profileResponse = await backendFetch(
+        `https://admin.online2study.in/api/user/${sessionData.id}/profile`
       );
       const profileData = await profileResponse.json();
 
@@ -82,13 +82,12 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    const sessionId = localStorage.getItem('sessionId');
+    const sessionId = getSessionId();
     if (sessionId) {
       // Attempt to log out from the backend, but don't block the flow if it fails
-      fetch('https://admin.online2study.in/logout.php', {
+      backendFetch('https://admin.online2study.in/logout.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'omit',
         body: JSON.stringify({ session_id: sessionId })
       }).catch(err => console.error("Backend logout error:", err));
     }

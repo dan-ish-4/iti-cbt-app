@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AllTrades.css';
 import TradeCard from '../TradeCard/TradeCard';
 import { useAuth } from '../../context/AuthContext'; // Import useAuth
+import { backendFetch } from '../../utils/backendFetch';
 
 const AllTrades = () => {
   const { backendUserId } = useAuth();
@@ -15,13 +16,13 @@ const AllTrades = () => {
     }
 
     // First, get the user's language ID from their profile
-    fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+    backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
       .then(res => res.json())
       .then(profileData => {
         if (profileData.status && profileData.data.language_id) {
           const languageId = profileData.data.language_id;
           // Now, fetch the categories for that language
-          return fetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
+          return backendFetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
         }
         throw new Error("Could not determine user language.");
       })

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './UserProfilePopup.css';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../Spinner/Spinner';
+import { backendFetch, getSessionId } from '../../utils/backendFetch';
 
 const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
   const { backendUserId, updateProfileStatus } = useAuth();
@@ -20,18 +21,13 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
 
   const languageMap = { "English": 1, "Hindi": 2, "Marathi": 3, "Bengali": 4, "Tamil": 5, "Telugu": 6, "Gujarati": 7, "Punjabi": 8 };
 
-  const getCsrfToken = () => {
-    const token = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='));
-    return token ? decodeURIComponent(token.split('=')[1]) : null;
-  };
-
   const fetchCategories = async (languageId) => {
     if (!languageId) {
       setCategories([]);
       return;
     }
     try {
-      const response = await fetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
+      const response = await backendFetch(`https://admin.online2study.in/api/get-categories/${languageId}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch categories`);
       }
@@ -53,7 +49,7 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
 
     if (backendUserId && isOpen) {
       setLoading(true);
-      fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+      backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
         .then(res => res.json())
         .then(data => {
           if (data.status && data.data) {
@@ -127,9 +123,9 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
     setLoading(true);
     setError('');
 
-    const csrfToken = getCsrfToken();
-    if (!csrfToken) {
-      setError("CSRF token not found. Please refresh the page.");
+    const sessionId = getSessionId();
+    if (!sessionId) {
+      setError("Session expired. Please log in again.");
       setLoading(false);
       return;
     }
@@ -146,20 +142,14 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
     } else {
       dataToSend.append("profile_image", formData.profileImageUrl);
     }
-    
-    // Note: Laravel can't handle PUT with FormData, so we use POST and spoof the method.
-    dataToSend.append("_method", "POST");
-
 
     try {
-      const response = await fetch(`https://admin.online2study.in/api/user/${backendUserId}/update`, {
+      const response = await backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/update`, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
-          'X-XSRF-TOKEN': csrfToken
+          'Accept': 'application/json'
         },
-        body: dataToSend,
-        credentials: 'include'
+        body: dataToSend
       });
 
       const result = await response.json();

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './AvailableCourses.css';
 import CourseCard from '../CourseCard/CourseCard';
 import { useAuth } from '../../context/AuthContext';
+import { backendFetch } from '../../utils/backendFetch';
 
 const AvailableCourses = () => {
     const { backendUserId } = useAuth(); // Get the ID from context
@@ -11,7 +12,7 @@ const AvailableCourses = () => {
 
     useEffect(() => {
         if (backendUserId) { // Check if the ID exists
-            fetch(`https://admin.online2study.in/api/courses/offers/${backendUserId}`)
+            backendFetch(`https://admin.online2study.in/api/courses/offers/${backendUserId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status && Array.isArray(data.data)) {

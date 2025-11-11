@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styles from './ProgressDashboardPage.module.css';
 import { FaFilter } from 'react-icons/fa';
 import ApexCharts from 'apexcharts';
+import { backendFetch } from '../../utils/backendFetch';
 
 const API_BASE_URL = "https://admin.online2study.in/api";
 const USER_ID = 4; // This should ideally come from authentication context
@@ -61,7 +62,7 @@ const ProgressDashboardPage = () => {
 
   const fetchData = async (url) => {
     try {
-      const response = await fetch(url);
+      const response = await backendFetch(url);
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }

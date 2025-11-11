@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { backendFetch } from '../utils/backendFetch';
 
 const languageMap = {
     1: "English", 2: "Hindi", 3: "Marathi", 4: "Bengali",
@@ -28,7 +29,7 @@ export function useUserProfile() {
         const fetchProfile = async () => {
             try {
                 // 1. Fetch main user profile
-                const profileRes = await fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`);
+                const profileRes = await backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`);
                 const profileData = await profileRes.json();
 
                 if (!profileData.status || !profileData.data) {
@@ -55,7 +56,7 @@ export function useUserProfile() {
 
                 // 4. Fetch category name if IDs are present
                 if (user.language_id && user.category_id) {
-                    const categoryRes = await fetch(`https://admin.online2study.in/api/get-categories/${user.language_id}`);
+                    const categoryRes = await backendFetch(`https://admin.online2study.in/api/get-categories/${user.language_id}`);
                     const categoryData = await categoryRes.json();
                     
                     if (categoryData.success && Array.isArray(categoryData.data)) {

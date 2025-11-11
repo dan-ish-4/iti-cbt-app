@@ -45,6 +45,12 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## Backend session workflow
+
+- The frontend talks to `https://admin.online2study.in` exclusively through stateless calls that send the `sessionId` provided by `login.php` in the `Authorization` header.
+- Every request omits browser credentials/cookies, so the Laravel APIs never rely on `laravel_session` or CSRF tokens. If you see HTTP 419 responses while developing, clear cookies for `admin.online2study.in` and retry.
+- Sensitive operations (profile update, mock tests, course data, etc.) must validate `sessionId` on the backend against the `user_sessions` table before mutating user data.
+
 ### Code Splitting
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)

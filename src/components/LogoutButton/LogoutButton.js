@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signOut } from 'firebase/auth';
 import Spinner from '../Spinner/Spinner';
 import { auth } from '../../firebase'; // Import the pre-initialized auth instance
+import { backendFetch } from '../../utils/backendFetch';
 
 const LogoutButton = ({ onLogoutSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,7 @@ const LogoutButton = ({ onLogoutSuccess }) => {
     // Optional: Notify backend to invalidate session
     if (sessionId) {
       try {
-        await fetch('https://admin.online2study.in/logout.php', {
+        await backendFetch('https://admin.online2study.in/logout.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ session_id: sessionId })
@@ -39,6 +40,7 @@ const LogoutButton = ({ onLogoutSuccess }) => {
 
       // Notify parent or trigger redirect
       if (onLogoutSuccess) onLogoutSuccess();
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       alert('Error logging out: ' + error.message);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UserProfileBanner.css';
 import { useAuth } from '../../context/AuthContext';
+import { backendFetch } from '../../utils/backendFetch';
 
 const UserProfileBanner = () => {
     const { backendUserId } = useAuth(); // Get the ID from context
@@ -13,7 +14,7 @@ const UserProfileBanner = () => {
             return;
         }
 
-        fetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
+        backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Network response was not ok');

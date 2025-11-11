@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styles from './CbtMockTestPage.module.css';
 import { FaFilter, FaCircle, FaExclamationCircle, FaCaretRight, FaUser } from 'react-icons/fa';
 import ApexCharts from 'apexcharts';
+import { backendFetch, getSessionId } from '../../utils/backendFetch';
 
 const languageMapping = { "1": "en", "2": "hi", "3": "mr", "4": "bn", "5": "ta", "6": "te", "7": "gu", "8": "pa" };
 const translations = {
@@ -95,7 +96,7 @@ const CbtMockTestPage = () => {
 
   const renderMockTests = (userId) => {
     const url = `https://admin.online2study.in/api/user/courses/${userId}?status=1`;
-    fetch(url)
+    backendFetch(url)
       .then(res => res.json())
       .then(data => {
         if (!data.status || !Array.isArray(data.data) || data.data.length === 0) return;
@@ -109,7 +110,7 @@ const CbtMockTestPage = () => {
         const subCategoryIds = (subCategoryId || []).map(id => parseInt(id));
 
         const categoriesUrl = `https://admin.online2study.in/api/get-categories/${currentLanguage}`;
-        fetch(categoriesUrl)
+        backendFetch(categoriesUrl)
           .then(res => res.json())
           .then(catData => {
             if (!catData.success || !Array.isArray(catData.data)) return;
@@ -140,7 +141,7 @@ const CbtMockTestPage = () => {
 
     showSpinner();
     const url = `https://admin.online2study.in/api/show/mock-test/${userId}/${selectedSubCategoryId}`;
-    fetch(url)
+    backendFetch(url)
       .then(res => {
         if (!res.ok) throw new Error(`Network response was not ok (${res.status})`);
         return res.json();
@@ -413,20 +414,18 @@ const CbtMockTestPage = () => {
 
   const fetchCBTQuestions = (userId, courseId, subCategoryId, subCategoryName) => {
     const url = `https://admin.online2study.in/api/${userId}/${courseId}/cbt?SubCategory=${subCategoryId}`;
-    const sessionId = localStorage.getItem("sessionId");
+    const sessionId = getSessionId();
     if (!sessionId) {
       alert("Session expired or missing. Please log in again.");
       return;
     }
 
     showSpinner();
-    fetch(url, {
+    backendFetch(url, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${sessionId}`,
         "Content-Type": "application/json",
       },
-      credentials: "include",
     })
       .then(res => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -943,12 +942,11 @@ const CbtMockTestPage = () => {
       time_taken: elapsedTime,
     };
 
-    fetch("https://admin.online2study.in/api/store/mock-test", {
+    backendFetch("https://admin.online2study.in/api/store/mock-test", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${sessionId}`,
       },
       body: JSON.stringify(resultData),
     })
