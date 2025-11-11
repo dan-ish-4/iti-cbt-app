@@ -85,26 +85,11 @@ const TradeSelection = () => {
       });
 
       const result = await response.json();
-
       if (!result.status) throw new Error(result.message || "Failed to update");
 
       console.log("✅ Profile updated successfully on backend!");
       localStorage.setItem("userLang", String(languageId));
       localStorage.setItem("userTrade", String(categoryId));
-      if(categoryId){
-        swal.fire({
-          title : "Trade Updated!",
-          text:"Your trade has been updated successfully.",
-          icon: "success",
-          confirmButtonText: "OK",
-          confirmButtonColor: "#4CAF50",
-           background: "#f9f9f9",
-        color: "#333",
-        timer: 3000,
-        timerProgressBar: true,
-        })
-      }
-
     } catch (err) {
       console.error("Error updating user profile:", err);
     }
@@ -130,6 +115,22 @@ const TradeSelection = () => {
 
     // Update backend (language + trade)
     updateUserProfile(selectedLanguage.id, trade.id);
+
+    // ✅ Show SweetAlert only for trade update
+    swal.fire({
+            title : "Profile Updated!",
+            text:"Your profile has been updated successfully.",
+            icon: "success",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#4CAF50",
+            background: "#f9f9f9",
+            color: "#333",
+            timer: 3000,
+            timerProgressBar: true,
+          }).then(() => {
+            // ✅ Reload after clicking OK
+            window.location.reload();
+          })
   };
 
   // 🔹 JSX UI
