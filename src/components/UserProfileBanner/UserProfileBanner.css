@@ -14,11 +14,16 @@
   align-items: center;
 }
 
-.profile__avatar {
-  font-size: 50px;
-  color: #0056b3; /* --color-primary-dark */
-  margin-right: 10px; /* --spacing-sm */
+.profile__avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #ffd54f;
+  object-fit: cover;
+  margin-right: 12px;
+  background-color: #f0f0f0;
 }
+
 
 .profile__text {
   display: flex;

@@ -1,4 +1,4 @@
-.trade-card {
+.trade-card-wrapper {
   width: 140px;
   height: 130px;
   background: #fff; /* --color-white */
@@ -13,7 +13,7 @@
   transition: transform .3s ease, box-shadow .3s ease;
   cursor: pointer;
 }
-.trade-card:hover {
+.trade-card-wrapper:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(0,0,0,.08); /* --shadow-md-hover */
 }
@@ -28,4 +28,15 @@
   font-size: 15px;
   font-weight: 600; /* --font-weight-semibold */
   color: #333; /* --color-dark */
+}
+
+/* ✅ Highlight selected trade with glow animation */
+ .trade-card-wrapper.selected-trade {
+  border: 2px solid #007bff;
+  background-color: #dbefff;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+  border-radius: 20px;
+  transform: scale(1.03);
+  transition: all 0.3s ease-in-out;
+  animation: pulseBlue 1.8s ease-in-out infinite alternate;
 }
