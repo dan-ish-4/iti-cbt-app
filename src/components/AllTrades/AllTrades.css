@@ -46,20 +46,20 @@
 
 /* ✅ Highlight selected trade with glow animation */
 .trade-card-wrapper.selected-trade {
-  border: 3px solid #4CAF50;
+  border: 3px solid #ffd54f;
   border-radius: 12px;
   transform: scale(1.05);
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+  box-shadow: 0 0 20px rgba(191, 190, 95, 0.6);
   animation: pulseGlow 1.5s ease-in-out infinite alternate;
 }
 
 /* ✨ Glow animation keyframes */
 @keyframes pulseGlow {
   0% {
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 10px rgba(191, 190, 95, 0.6);
   }
   100% {
-    box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
+    box-shadow: 0 0 25px rgba(191, 190, 95, 0.6);
   }
 }
