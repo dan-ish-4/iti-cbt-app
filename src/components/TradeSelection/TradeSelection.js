@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './TradeSelection.css';
-import { useAuth } from '../../context/AuthContext'; // Import useAuth to get the user ID
+import { useAuth } from '../../context/AuthContext';
 import { backendFetch } from '../../utils/backendFetch';
+import swal from 'sweetalert2';
 
 const TradeSelection = () => {
   const { backendUserId } = useAuth();
@@ -10,18 +11,20 @@ const TradeSelection = () => {
 
   const [languages, setLanguages] = useState([]);
   const [categories, setCategories] = useState([]);
-  
+
   const [selectedLanguage, setSelectedLanguage] = useState({ id: null, name: 'Select Language' });
   const [selectedTrade, setSelectedTrade] = useState({ id: null, name: 'Loading...' });
-  
+
   const [loading, setLoading] = useState(false);
 
+  // 🔹 Load languages and user profile
   useEffect(() => {
-    // Populate the static list of languages
-    const languageMap = { "English": 1, "Hindi": 2, "Marathi": 3, "Bengali": 4, "Tamil": 5, "Telugu": 6, "Gujarati": 7, "Punjabi": 8 };
+    const languageMap = {
+      English: 1, Hindi: 2, Marathi: 3, Bengali: 4,
+      Tamil: 5, Telugu: 6, Gujarati: 7, Punjabi: 8
+    };
     setLanguages(Object.entries(languageMap).map(([name, id]) => ({ id, name })));
 
-    // Fetch user's profile to set the initial language and trade
     if (backendUserId) {
       backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/profile`)
         .then(res => res.json())
@@ -33,23 +36,24 @@ const TradeSelection = () => {
               setSelectedLanguage({ id: user.language_id, name: userLang[0] });
             }
           }
-        });
+        })
+        .catch(err => console.error("Error fetching user profile:", err));
     }
   }, [backendUserId]);
 
-  // Effect to fetch trade categories whenever the selected language changes
+  // 🔹 Fetch trades when language changes
   useEffect(() => {
     if (!selectedLanguage.id) return;
 
     setLoading(true);
-    setSelectedTrade({ id: null, name: 'Loading Trades...' }); // Show loading state
+    setSelectedTrade({ id: null, name: 'Loading Trades...' });
+
     backendFetch(`https://admin.online2study.in/api/get-categories/${selectedLanguage.id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
           setCategories(data.data);
-          // After fetching, try to find the user's saved trade
-          const savedTradeId = localStorage.getItem('userTrade'); // Or fetch from profile again
+          const savedTradeId = localStorage.getItem('userTrade');
           const currentTrade = data.data.find(t => t.id == savedTradeId);
           setSelectedTrade(currentTrade || { id: null, name: 'Select Your Trade' });
         } else {
@@ -63,20 +67,72 @@ const TradeSelection = () => {
       })
       .finally(() => setLoading(false));
   }, [selectedLanguage.id]);
-  
+
+  // 🔹 Update user profile on backend
+  const updateUserProfile = async (languageId, categoryId) => {
+    if (!backendUserId) return;
+
+    try {
+      const dataToSend = new FormData();
+      dataToSend.append("language_id", languageId);
+      dataToSend.append("category_id", categoryId);
+      dataToSend.append("login_type", "google");
+
+      const response = await backendFetch(`https://admin.online2study.in/api/user/${backendUserId}/update`, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: dataToSend
+      });
+
+      const result = await response.json();
+
+      if (!result.status) throw new Error(result.message || "Failed to update");
+
+      console.log("✅ Profile updated successfully on backend!");
+      localStorage.setItem("userLang", String(languageId));
+      localStorage.setItem("userTrade", String(categoryId));
+      if(categoryId){
+        swal.fire({
+          title : "Trade Updated!",
+          text:"Your trade has been updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#4CAF50",
+           background: "#f9f9f9",
+        color: "#333",
+        timer: 3000,
+        timerProgressBar: true,
+        })
+      }
+
+    } catch (err) {
+      console.error("Error updating user profile:", err);
+    }
+  };
+
+  // 🔹 Event handlers
   const handleLanguageSelect = (lang) => {
-      setSelectedLanguage(lang);
-      setLanguageOpen(false);
-      // In a full app, we would also call an API to update the user's language preference here.
+    setSelectedLanguage(lang);
+    setLanguageOpen(false);
+
+    // Reset trade when language changes
+    setSelectedTrade({ id: null, name: "Select Your Trade" });
+    localStorage.removeItem("userTrade");
+
+    // Update backend (language only)
+    updateUserProfile(lang.id, selectedTrade.id || '');
   };
 
   const handleTradeSelect = (trade) => {
-      setSelectedTrade(trade);
-      setTradeOpen(false);
-      // In a full app, we would call an API to update the user's trade here.
-      localStorage.setItem('userTrade', trade.id); // Persist selection locally
+    setSelectedTrade(trade);
+    setTradeOpen(false);
+    localStorage.setItem("userTrade", trade.id);
+
+    // Update backend (language + trade)
+    updateUserProfile(selectedLanguage.id, trade.id);
   };
 
+  // 🔹 JSX UI
   return (
     <section className="trade-selection" id="userSection">
       {/* Language Selector */}

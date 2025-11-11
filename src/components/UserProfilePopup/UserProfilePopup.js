@@ -3,6 +3,7 @@ import './UserProfilePopup.css';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../Spinner/Spinner';
 import { backendFetch, getSessionId } from '../../utils/backendFetch';
+import swal from 'sweetalert2';
 
 const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
   const { backendUserId, updateProfileStatus } = useAuth();
@@ -161,8 +162,22 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
       if (!result.status) {
         throw new Error(result.message || "Failed to update profile.");
       }
-
-      alert("Profile updated successfully.");
+      swal.fire({
+        title : "Profile Updated!",
+        text:"Your profile has been updated successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#4CAF50",
+        background: "#f9f9f9",
+        color: "#333",
+        timer: 3000,
+        timerProgressBar: true,
+      }).then(() => {
+        // ✅ Reload after clicking OK
+        window.location.reload();
+      })
+      //alert("Profile updated successfully.");
+      //window.location.reload();
 
       localStorage.setItem("userProfileCompleted", "true");
       localStorage.setItem("userName", formData.name);
@@ -195,7 +210,7 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
         <form onSubmit={handleSubmit} noValidate>
           <div className='popup-header'>
             <h2>{isUpdateMode ? 'Update Your Profile' : 'Complete Your Profile'}</h2>
-            <button type="button" className='close-button' onClick={onClose}>X</button>
+            <button className="close-btn" onClick={onClose}>&#10006;</button>
           </div>
           
           <label htmlFor="imageInput" className='profile-image-container'>
