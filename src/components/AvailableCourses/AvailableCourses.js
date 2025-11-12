@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PlanPopup from '../PlanPopup/PlanPopup';
 import './AvailableCourses.css';
 import CourseCard from '../CourseCard/CourseCard';
 import { useAuth } from '../../context/AuthContext';
@@ -9,6 +10,8 @@ const AvailableCourses = () => {
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isPlanPopupOpen, setIsPlanPopupOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
 
     useEffect(() => {
         if (backendUserId) { // Check if the ID exists
@@ -35,6 +38,16 @@ const AvailableCourses = () => {
         }
     }, [backendUserId]); // Re-run if the ID changes
 
+    const handleBuyNowClick = (course) => {
+        setSelectedCourse(course);
+        setIsPlanPopupOpen(true);
+    };
+
+    const handleClosePlanPopup = () => {
+        setIsPlanPopupOpen(false);
+        setSelectedCourse(null);
+    };
+
   const renderContent = () => {
     if (isLoading) {
       return <p className="status-message">Loading available courses...</p>;
@@ -46,7 +59,7 @@ const AvailableCourses = () => {
       return <p className="status-message">No courses available at the moment.</p>;
     }
     return courses.map(course => (
-      <CourseCard key={course.id} course={course} />
+      <CourseCard key={course.id} course={course} onBuyNowClick={handleBuyNowClick} />
     ));
   };
 
@@ -61,6 +74,11 @@ const AvailableCourses = () => {
           {renderContent()}
         </div>
       </div>
+      <PlanPopup
+        isOpen={isPlanPopupOpen}
+        onClose={handleClosePlanPopup}
+        course={selectedCourse}
+      />
     </div>
   );
 };

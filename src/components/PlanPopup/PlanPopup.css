@@ -1,69 +1,180 @@
-.plan-popup-box {
-    padding: 20px;
-}
-.plan-heading {
-  font-size: 24px;
-  margin-bottom: 25px;
-  text-align: center;
-}
-.plan-popup-wrapper {
+/* --- Base Styles for the Popup --- */
+.planPopup__overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
-  flex-wrap: wrap;
+  align-items: center; /* Vertically centers the popup by default */
   justify-content: center;
-  gap: 20px;
+  z-index: 1000;
+  padding: 1rem;
+  
+  /* KEY CHANGE FOR HEIGHT: Enables vertical scrolling ONLY if content is taller than the screen */
+  overflow-y: auto; 
 }
-.plan-box {
-  background: #fff;
-  border: 2px solid #888;
-  border-radius: 20px;
-  padding: 20px;
+
+.planPopup__content {
+  background: #f8f9fa;
+  border-radius: 12px;
+  position: relative;
   width: 100%;
-  max-width: 280px;
+  max-width: 1050px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+  /* We DO NOT set a fixed height here. The height will be 'auto' by default, 
+     which means it will grow or shrink to fit its content. */
+}
+
+.planPopup__closeBtn {
+  position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: red;
+    color: #fff !important;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+}
+
+.planPopup__heading {
   text-align: center;
+  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #212529;
 }
-.plan-highlight {
-  border-color: #fbb034;
+
+/* --- Flexbox Wrapper for Automatic Resizing --- */
+.planPopup__wrapper {
+  display: flex;
+  flex-wrap: wrap; /* This is essential for responsiveness */
+  justify-content: center;
+  gap: clamp(1rem, 4vw, 1.5rem);  
+  padding-bottom: 1rem;
 }
-.plan-sub {
-  font-size: 14px;
-  color: #7c8a99;
+
+.planPopup__box {
+  background: #ffffff;
+  border: 2px solid;
+  border-radius: 15px;
+  padding: 30px 25px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 300px;
+  max-width:250px;
+  min-width: 200px;
 }
-.plan-badge {
-  background: #072e5a;
-  color: #fff;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  margin-left: 8px;
-  display: inline-block;
+
+/* ... (baaki sabhi styles jaise title, price, button, etc. same rahenge) ... */
+.planPopup__title {
+    font-size: clamp(1.4rem, 3vw, 1.6rem);
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 8px;
 }
-.plan-box h2 {
-  margin-top: 5px;
-}
-.plan-validity {
-  background: #f9db80;
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 50px;
-  font-weight: 700;
-  margin-top: 10px;
-  display: inline-block;
-}
-.plan-note {
+.planPopup__sub {
   font-size: 15px;
-  color: #7c8a99;
-  margin: 15px 0;
+  color: #6c757d;
+  margin-bottom: 15px;
+  min-height: 22px;
 }
-.plan-btn {
+.planPopup__priceStrike {
+    color: #6c757d;
+    font-size: 16px;
+    height: 24px;
+}
+.planPopup__price {
+    font-size: clamp(1.5rem, 4vw, 1.75rem);
+    font-weight: bold;
+    color: #212529;
+    margin-bottom: 20px;
+}
+.planPopup__validity {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: bold;
+  margin: 0 auto 25px auto;
+  display: inline-block;
+  font-size: 16px;
+}
+.planPopup__note {
+  font-size: 15px;
+  color: #6c757d;
+  line-height: 1.5;
+  margin-bottom: 25px;
+  flex-grow: 1;
+}
+.planPopup__note strong {
+    color: #212529;
+    font-weight: bold;
+}
+.planPopup__btn {
   width: 100%;
-  background: #ffc107;
-  color: #000;
-  padding: 12px;
+  padding: 15px;
   border: none;
   border-radius: 50px;
-  font-size: 15px;
-  font-weight: 700;
-  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.planPopup__box--annual, 
+.planPopup__box--semiAnnual {
+    border-color: #ffc107;
+}
+.planPopup__box--annual .planPopup__validity,
+.planPopup__box--semiAnnual .planPopup__validity {
+    background: #fff3cd;
+    color: #594402;
+}
+.planPopup__btn--choose {
+    background: #ffc107;
+    color: #000;
+}
+.planPopup__btn--choose:hover {
+    background: #e0a800;
+}
+.planPopup__box--monthly {
+    border-color: #4bc7f7;
+    box-shadow: 0 0 15px rgba(75, 199, 247, 0.3);
+}
+.planPopup__validity--current {
+    background: #d4effc;
+    color: #014a68;
+}
+.planPopup__btn--current {
+  background: #4bc7f7;
+  color: #ffffff;
+}
+.planPopup__btn--current:hover {
+  background: #2cb7f5;
+}
+
+
+/* --- KEY CHANGE FOR MOBILE HEIGHT BEHAVIOR --- */
+/* Media query for smaller screens where content is likely to overflow vertically */
+@media (max-width: 768px) {
+  .planPopup__overlay {
+    /* Changes alignment from center to top to make scrolling more natural */
+    align-items: flex-start;
+    padding-top: 50px; /* Adds space at the top */
+    padding-bottom: 50px; /* Adds space at the bottom */
+  }
+
+  .planPopup__closeBtn {
+    top: 10px;
+    right: 10px;
+  }
 }

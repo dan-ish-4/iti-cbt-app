@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PlanPopup from '../PlanPopup/PlanPopup';
 import './PurchasedCourses.css';
 import PurchasedCourseCard from '../PurchasedCourseCard/PurchasedCourseCard';
 import { useAuth } from '../../context/AuthContext';
@@ -9,6 +10,8 @@ const PurchasedCourses = () => {
     const [courses, setCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isPlanPopupOpen, setIsPlanPopupOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState(null);
 
     useEffect(() => {
         if (backendUserId) { // Check if the ID exists
@@ -33,6 +36,16 @@ const PurchasedCourses = () => {
         }
     }, [backendUserId]); // Re-run if the ID changes
 
+    const handleUpgradeClick = (course) => {
+        setSelectedCourse(course);
+        setIsPlanPopupOpen(true);
+    };
+
+    const handleClosePlanPopup = () => {
+        setIsPlanPopupOpen(false);
+        setSelectedCourse(null);
+    };
+
   const renderContent = () => {
     if (isLoading) {
       return <p className="status-message">Loading purchased courses...</p>;
@@ -44,7 +57,7 @@ const PurchasedCourses = () => {
       return <p className="status-message">No purchased courses found.</p>;
     }
     return courses.map(course => (
-      <PurchasedCourseCard key={course.id || course.course_id} course={course} />
+      <PurchasedCourseCard key={course.id || course.course_id} course={course} onUpgradeClick={handleUpgradeClick} />
     ));
   };
 
@@ -64,6 +77,11 @@ const PurchasedCourses = () => {
             <div key={index} className={`dot ${index === 0 ? 'active' : ''}`}></div>
           ))}
         </div>
+        <PlanPopup
+          isOpen={isPlanPopupOpen}
+          onClose={handleClosePlanPopup}
+          course={selectedCourse}
+        />
       </div>
     </div>
   );

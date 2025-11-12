@@ -1,7 +1,7 @@
 import React from 'react';
 import './CourseCard.css';
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, onBuyNowClick }) => {
   // Default values for safety
   const name = course?.name?.substring(0, 50) || "Course Name";
   const imageUrl = course?.banner
@@ -28,9 +28,9 @@ const CourseCard = ({ course }) => {
           <span className="new-price">₹{finalPrice}/Year Only</span>
         </p>
       </div>
-      <a href="#" className="buy-btn">
+      <button className="buy-btn" onClick={() => onBuyNowClick(course)}>
         Buy Now
-      </a>
+      </button>
     </div>
   );
 };

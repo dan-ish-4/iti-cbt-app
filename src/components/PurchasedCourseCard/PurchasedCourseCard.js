@@ -8,7 +8,7 @@ const formatDate = (dateStr) => {
   return new Date(dateStr).toLocaleDateString('en-GB', options);
 };
 
-const PurchasedCourseCard = ({ course }) => {
+const PurchasedCourseCard = ({ course, onUpgradeClick }) => {
   const detail = course.course_detail || {};
   const name = detail.name || "Course Name";
   const planType = course.plan_type || "N/A";
@@ -36,7 +36,7 @@ const PurchasedCourseCard = ({ course }) => {
         </div>
       </div>
       <div className="pur-actions">
-        <button className="pur-btn pur-btn-upgrade">Upgrade</button>
+        <button className="pur-btn pur-btn-upgrade" onClick={() => onUpgradeClick(course)}>Upgrade</button>
         <button className="pur-btn pur-btn-enroll">Enroll Now</button>
       </div>
     </div>
