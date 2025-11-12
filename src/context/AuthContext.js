@@ -14,6 +14,9 @@ export function AuthProvider({ children }) {
   const [backendUserId, setBackendUserId] = useState(null);
   const [isProfileComplete, setProfileComplete] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [profileImage, setProfileImage] = useState("https://cdn-icons-png.flaticon.com/512/847/847969.png");
+  const storedImage = localStorage.getItem("userProfileImage");
+  const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
 
   function updateProfileStatus(isComplete) {
     setProfileComplete(isComplete);
@@ -64,6 +67,14 @@ export function AuthProvider({ children }) {
       
       setProfileComplete(!!isComplete);
       localStorage.setItem("userProfileCompleted", isComplete ? "true" : "false");
+      // 🔹 Save profile image globally
+      let imageUrl = userProfile.profile_image
+        ? (userProfile.profile_image.startsWith("http")
+            ? userProfile.profile_image
+            : `https://admin.online2study.in/storage/${userProfile.profile_image}`)
+        : "";
+      setProfileImage(imageUrl);
+      localStorage.setItem("userProfileImage", imageUrl);
 
     } catch (error) {
       console.error("Backend login or profile check failed:", error);
@@ -110,10 +121,13 @@ export function AuthProvider({ children }) {
         setBackendUserId(localUserId);
         const isComplete = localStorage.getItem("userProfileCompleted") === "true";
         setProfileComplete(isComplete);
+        setProfileImage(storedImage || defaultImage);
+       
       } else {
         // No user or no session data, ensure logged out state
         setBackendUserId(null);
         setProfileComplete(false);
+        setProfileImage(defaultImage)
       }
       setLoading(false);
     });
@@ -128,7 +142,9 @@ export function AuthProvider({ children }) {
     loading,
     loginWithGoogle,
     logout,
-    updateProfileStatus // Add this
+    updateProfileStatus, // Add this
+    profileImage,
+    setProfileImage
   };
 
   return (

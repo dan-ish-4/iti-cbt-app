@@ -6,7 +6,7 @@ import { backendFetch, getSessionId } from '../../utils/backendFetch';
 import swal from 'sweetalert2';
 
 const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
-  const { backendUserId, updateProfileStatus } = useAuth();
+  const { backendUserId, updateProfileStatus,setProfileImage } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -159,37 +159,42 @@ const UserProfilePopup = ({ isOpen, onClose, isUpdateMode = false }) => {
         throw new Error(result.message || `HTTP error! status: ${response.status}`);
       }
 
-      if (!result.status) {
-        throw new Error(result.message || "Failed to update profile.");
-      }
-      swal.fire({
-        title : "Profile Updated!",
-        text:"Your profile has been updated successfully.",
-        icon: "success",
-        confirmButtonText: "OK",
-        confirmButtonColor: "#4CAF50",
-        background: "#f9f9f9",
-        color: "#333",
-        timer: 3000,
-        timerProgressBar: true,
-      }).then(() => {
-        // ✅ Reload after clicking OK
-        window.location.reload();
-      })
-      //alert("Profile updated successfully.");
-      //window.location.reload();
+     if (!result.status) {
+  throw new Error(result.message || "Failed to update profile.");
+}
 
-      localStorage.setItem("userProfileCompleted", "true");
-      localStorage.setItem("userName", formData.name);
-      localStorage.setItem("userMobile", formData.mobile);
-      localStorage.setItem("userLang", String(formData.languageId));
-      localStorage.setItem("userTrade", String(formData.categoryId));
+swal.fire({
+  title: "Profile Updated!",
+  text: "Your profile has been updated successfully.",
+  icon: "success",
+  confirmButtonText: "OK",
+  confirmButtonColor: "#4CAF50",
+  background: "#f9f9f9",
+  color: "#333",
+  timer: 3000,
+  timerProgressBar: true,
+}).then(() => {
+  // ✅ Instantly update BottomNav profile image
+  const newImageUrl = formData.profileImageUrl;
+  setProfileImage(newImageUrl);
+  localStorage.setItem("userProfileImage", formData.profileImageUrl);
+if (typeof setProfileImage === 'function') {
+  setProfileImage(formData.profileImageUrl);
+}
 
-      if (typeof updateProfileStatus === 'function') {
-        updateProfileStatus(true);
-      }
-      
-      onClose();
+  onClose();
+});
+
+localStorage.setItem("userProfileCompleted", "true");
+localStorage.setItem("userName", formData.name);
+localStorage.setItem("userMobile", formData.mobile);
+localStorage.setItem("userLang", String(formData.languageId));
+localStorage.setItem("userTrade", String(formData.categoryId));
+
+if (typeof updateProfileStatus === 'function') {
+  updateProfileStatus(true);
+}
+
 
     } catch (err) {
       console.error("Update failed:", err);

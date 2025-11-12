@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom'; // Import Link/NavLink
+import { useAuth } from '../../context/AuthContext';
 import './BottomNav.css';
 
 const BottomNav = ({ onProfileClick }) => {
   // A placeholder profile image URL
-  const profileImageUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgujRjGkIBqKVMdoC2rgHg0OhXXnOSCgccz1SIieEQvQJZf3Z1LLLwYk8ffU0ZtHKFF_jrT1V6BgCBsY9RZx6s5WRyNOKjM8D4fJMo4VuqfIJjFs_9KvN2CxZdVVQvWXFBOeIQ7LkJ6v4BadMeu73km0RkYr88e1cBmjd5ZrUg84sVYIWyui6VPaNBlqmKJ/s320/profile.png";
+   const { profileImage } = useAuth();
+
 
   return (
     <div className="bottom-nav">
@@ -27,7 +29,7 @@ const BottomNav = ({ onProfileClick }) => {
         <span>Wallet</span>
       </NavLink>
       <a className="nav-btn" id="profile-link" onClick={onProfileClick}>
-        <img alt="Profile" className="profile-img" src={profileImageUrl} />
+        <img alt="Profile" className="profile-img" src={profileImage} />
         <span>Profile</span>
       </a>
     </div>
