@@ -1,10 +1,11 @@
 .profile {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: #ffd54f; /* --color-secondary */
+  background-color: #007bff; /* --color-secondary */
   padding: 15px; /* --spacing-md */
   border-radius: 10px; /* --border-radius-md */
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 15px; /* --spacing-md */
   flex-wrap: wrap;
 }
@@ -27,8 +28,9 @@
 
 .profile__text {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 5px;
 }
 
 .profile__welcome,
@@ -49,7 +51,7 @@
 .profile__btn {
   display: flex;
   align-items: center;
-  background-color: #007bff; /* --color-primary */
+  background-color: #036; /* --color-primary */
   padding: 10px 15px;
   border-radius: 5px; /* --border-radius-sm */
   gap: 5px; /* --spacing-xs */
