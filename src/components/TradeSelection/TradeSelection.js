@@ -118,8 +118,8 @@ const TradeSelection = () => {
 
     // ✅ Show SweetAlert only for trade update
     swal.fire({
-            title : "Profile Updated!",
-            text:"Your profile has been updated successfully.",
+            title : "Trade Updated!",
+            text:"Your Trade has been updated successfully.",
             icon: "success",
             confirmButtonText: "OK",
             confirmButtonColor: "#4CAF50",
