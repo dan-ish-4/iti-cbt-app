@@ -1,51 +1,116 @@
-import React from 'react';
-import './PlanPopup.css'; // Updated CSS file import
+import React, { useEffect, useState } from "react";
+import "./PlanPopup.css";
+import { useAuth } from "../../context/AuthContext";
+import { backendFetch } from "../../utils/backendFetch";
+import Spinner from "../Spinner/Spinner";
 
 const PlanPopup = ({ isOpen, onClose }) => {
-  if (!isOpen) {
-    return null;
-  }
+  const { backendUserId } = useAuth(); // ✅ Get current user ID
+  const [plans, setPlans] = useState([]); // To hold subscription options
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!isOpen || !backendUserId) return;
+
+    const fetchPlans = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await backendFetch(
+          `https://admin.online2study.in/api/courses/offers/${backendUserId}`
+        );
+        const data = await response.json();
+
+        if (data.status && Array.isArray(data.data) && data.data.length > 0) {
+          // ✅ Extract subscription data (annual, semi-annual, monthly)
+          const course = data.data[0];
+          const subs = course.subscription || {};
+
+          // Convert to an array for rendering easily
+          const formattedPlans = Object.entries(subs).map(([key, value]) => ({
+            id: key,
+            name:
+              key === "annual"
+                ? "Annual Plan"
+                : key === "semi_annual"
+                ? "Semi Annual Plan"
+                : "Monthly Plan",
+            price: value.amount,
+            validity: value.validity,
+            finalAmount: value.final_amount,
+          }));
+
+          setPlans(formattedPlans);
+        } else {
+          setError("No plans available right now.");
+        }
+      } catch (err) {
+        console.error("Error fetching plans:", err);
+        setError("Failed to load plans. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, [isOpen, backendUserId]);
+
+  // ✅ Handle plan selection
+  const handleChoosePlan = (plan) => {
+    console.log("Selected Plan:", plan);
+    // Example: redirect or trigger payment flow
+    // window.location.href = `/checkout?planType=${plan.id}`;
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="planPopup__overlay">
       <div className="planPopup__content">
-        <span className="planPopup__closeBtn" onClick={onClose}>X</span>
+        <span className="planPopup__closeBtn" onClick={onClose}>
+          X
+        </span>
+
         <h2 className="planPopup__heading">Choose Your Plan</h2>
+
+        {loading && <Spinner isLoading={true} />}
+        {error && <p className="planPopup__error">{error}</p>}
+
         <div className="planPopup__wrapper">
+          {!loading &&
+            !error &&
+            plans.map((plan) => (
+              <div
+                key={plan.id}
+                className={`planPopup__box planPopup__box--${plan.id}`}
+              >
+                <h3 className="planPopup__title">{plan.name}</h3>
+                <p className="planPopup__sub">
+                  {plan.id === "annual"
+                    ? "The lowest cost plan"
+                    : plan.id === "semi_annual"
+                    ? "The most popular plan"
+                    : "Perfect for beginners"}
+                </p>
 
-          {/* Annual Plan */}
-          <div className="planPopup__box planPopup__box--annual">
-            <h3 className="planPopup__title">Annual Plan</h3>
-            <p className="planPopup__sub">The lowest cost plan</p>
-            <p className="planPopup__priceStrike"><del>₹149 / Month</del></p>
-            <h2 className="planPopup__price">₹ 99 / Month</h2>
-            <div className="planPopup__validity">Validity 12 Months</div>
-            <p className="planPopup__note">After Discount, The Total Price Of This Plan Is <strong>₹1200</strong>, Valid For <strong>365 Days</strong>.</p>
-            <button className="planPopup__btn planPopup__btn--choose">Choose Plan</button>
-          </div>
+                <h2 className="planPopup__price">₹ {plan.price} / Month</h2>
+                <div className="planPopup__validity">
+                  Validity: {plan.validity} Days
+                </div>
+                <p className="planPopup__note">
+                  Total Price: <strong>₹{plan.finalAmount}</strong>
+                </p>
 
-          {/* Semi-Annual Plan */}
-          <div className="planPopup__box planPopup__box--semiAnnual">
-            <h3 className="planPopup__title">Semi Annual Plan</h3>
-            <p className="planPopup__sub">The Most Popular plan</p>
-            <p className="planPopup__priceStrike"><del>₹150 / Month</del></p>
-            <h2 className="planPopup__price">₹ 100 / Month</h2>
-            <div className="planPopup__validity">Validity 6 Months</div>
-            <p className="planPopup__note">After Discount, The Total Price Of This Plan Is <strong>₹600</strong>, Valid For <strong>180 Days</strong>.</p>
-            <button className="planPopup__btn planPopup__btn--choose">Choose Plan</button>
-          </div>
-
-          {/* Monthly Plan */}
-          <div className="planPopup__box planPopup__box--monthly">
-            <h3 className="planPopup__title">Monthly Plan</h3>
-            <p className="planPopup__sub">Good for beginners</p>
-            <p className="planPopup__priceStrike"><del>₹150 / Month</del></p>
-            <h2 className="planPopup__price">₹ 100 / Month</h2>
-            <div className="planPopup__validity planPopup__validity--current">Validity 1 Month</div>
-            <p className="planPopup__note">After Discount, The Total Price Of This Plan Is <strong>₹100</strong>, Valid For <strong>30 Days</strong>.</p>
-            <button className="planPopup__btn planPopup__btn--current">Current Plan</button>
-          </div>
-          
+                <button
+                  className="planPopup__btn planPopup__btn--choose"
+                  onClick={() => handleChoosePlan(plan)}
+                >
+                  Choose Plan
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </div>
