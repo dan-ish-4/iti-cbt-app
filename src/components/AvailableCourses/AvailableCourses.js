@@ -13,6 +13,8 @@ const AvailableCourses = () => {
     const [isPlanPopupOpen, setIsPlanPopupOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [purchasedCourses, setPurchasedCourses] = useState([]);
+    const [showButton , setShowButton] = useState(false);
+
 
 
     useEffect(() => {
@@ -82,6 +84,7 @@ const AvailableCourses = () => {
   if (courses.length === 0) {
     return <p className="status-message">No courses available at the moment.</p>;
   }
+  const visibleCourse = showButton ? courses: courses.slice(0,4);
 
   return courses.map(course => {
 
@@ -107,7 +110,7 @@ const AvailableCourses = () => {
       <div className="courses-box">
         <div className="courses-header">
           <h2>Available Courses</h2>
-          <a href="#">View all</a>
+          <button className = 'view-all-btn' onClick={()=>setShowButton(prev => !prev)}>{showButton ? 'Show Less': 'View All'}</button>
         </div>
         <div className="courses-list-container" id="CoursesList">
           {renderContent()}
