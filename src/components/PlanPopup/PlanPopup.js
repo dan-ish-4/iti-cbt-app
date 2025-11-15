@@ -5,10 +5,11 @@ import { backendFetch } from "../../utils/backendFetch";
 import Spinner from "../Spinner/Spinner";
 
 const PlanPopup = ({ isOpen, onClose }) => {
-  const { backendUserId } = useAuth(); // ✅ Get current user ID
-  const [plans, setPlans] = useState([]); // To hold subscription options
+  const { backendUserId } = useAuth();
+  const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentPlan, setCurrentPlan] = useState(""); // ✅ store which plan user currently has
 
   useEffect(() => {
     if (!isOpen || !backendUserId) return;
@@ -24,25 +25,46 @@ const PlanPopup = ({ isOpen, onClose }) => {
         const data = await response.json();
 
         if (data.status && Array.isArray(data.data) && data.data.length > 0) {
-          // ✅ Extract subscription data (annual, semi-annual, monthly)
           const course = data.data[0];
           const subs = course.subscription || {};
 
-          // Convert to an array for rendering easily
-          const formattedPlans = Object.entries(subs).map(([key, value]) => ({
-            id: key,
-            name:
-              key === "annual"
-                ? "Annual Plan"
-                : key === "semi_annual"
-                ? "Semi Annual Plan"
-                : "Monthly Plan",
-            price: value.amount,
-            validity: value.validity,
-            finalAmount: value.final_amount,
-          }));
+          // ✅ Example assumption: your backend might add this later
+          // e.g., course.current_plan = "monthly" or "annual"
+          setCurrentPlan(course.current_plan || "monthly"); // fallback if missing
 
-          setPlans(formattedPlans);
+          const formattedPlans = Object.entries(subs).map(([key, value]) => {
+            // parse numeric values
+            const finalAmount = Number(value.final_amount || value.amount || 0);
+            const validityDays = Number(value.validity || 0);
+
+            // estimate months from validity days.
+            // for 365 days -> 12 months, otherwise round(validity/30)
+            const months =
+              validityDays >= 365 ? 12 : Math.max(1, Math.round(validityDays / 30));
+
+            // compute monthly price
+            const monthlyPrice = months > 0 ? +(finalAmount / months).toFixed(2) : finalAmount;
+
+            return {
+              id: key,
+              name:
+                key === "annual"
+                  ? "Annual Plan"
+                  : key === "semi_annual"
+                    ? "Semi Annual Plan"
+                    : "Monthly Plan",
+              monthlyPrice,        // price per month (computed)
+              validity: validityDays,
+              totalPrice: finalAmount // total for the plan
+            };
+          });
+
+
+          const sortedPlans = ["annual", "semi_annual", "monthly"]
+            .map((k) => formattedPlans.find((p) => p.id === k))
+            .filter(Boolean);
+
+          setPlans(sortedPlans);
         } else {
           setError("No plans available right now.");
         }
@@ -57,11 +79,10 @@ const PlanPopup = ({ isOpen, onClose }) => {
     fetchPlans();
   }, [isOpen, backendUserId]);
 
-  // ✅ Handle plan selection
   const handleChoosePlan = (plan) => {
-    console.log("Selected Plan:", plan);
-    // Example: redirect or trigger payment flow
-    // window.location.href = `/checkout?planType=${plan.id}`;
+    console.log("Upgrading to:", plan);
+    // Here you can trigger your Razorpay or payment flow.
+    // Example: window.location.href = `/checkout?plan=${plan.id}`;
   };
 
   if (!isOpen) return null;
@@ -81,36 +102,48 @@ const PlanPopup = ({ isOpen, onClose }) => {
         <div className="planPopup__wrapper">
           {!loading &&
             !error &&
-            plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`planPopup__box planPopup__box--${plan.id}`}
-              >
-                <h3 className="planPopup__title">{plan.name}</h3>
-                <p className="planPopup__sub">
-                  {plan.id === "annual"
-                    ? "The lowest cost plan"
-                    : plan.id === "semi_annual"
-                    ? "The most popular plan"
-                    : "Perfect for beginners"}
-                </p>
+            plans.map((plan) => {
+              const isCurrent = plan.id === currentPlan;
 
-                <h2 className="planPopup__price">₹ {plan.price} / Month</h2>
-                <div className="planPopup__validity">
-                  Validity: {plan.validity} Days
-                </div>
-                <p className="planPopup__note">
-                  Total Price: <strong>₹{plan.finalAmount}</strong>
-                </p>
-
-                <button
-                  className="planPopup__btn planPopup__btn--choose"
-                  onClick={() => handleChoosePlan(plan)}
+              return (
+                <div
+                  key={plan.id}
+                  className={`planPopup__box planPopup__box--${plan.id} ${
+                    isCurrent ? "planPopup__box--current" : ""
+                  }`}
                 >
-                  Choose Plan
-                </button>
-              </div>
-            ))}
+                  <h3 className="planPopup__title">{plan.name}</h3>
+                  <p className="planPopup__sub">
+                    {plan.id === "annual"
+                      ? "The lowest cost plan"
+                      : plan.id === "semi_annual"
+                      ? "The most popular plan"
+                      : "Perfect for beginners"}
+                  </p>
+
+                  <h2 className="planPopup__price">₹ {plan.monthlyPrice} / Month</h2>
+                  <div className="planPopup__validity">
+                    Validity: {plan.validity} Days
+                  </div>
+                  <p className="planPopup__note">
+                    Total Price: <strong>₹{plan.totalPrice}</strong>
+                  </p>
+
+                  {isCurrent ? (
+                    <button className="planPopup__btn planPopup__btn--current" disabled>
+                      Current Plan
+                    </button>
+                  ) : (
+                    <button
+                      className="planPopup__btn planPopup__btn--choose"
+                      onClick={() => handleChoosePlan(plan)}
+                    >
+                      Upgrade Plan
+                    </button>
+                  )}
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

@@ -151,15 +151,30 @@
     box-shadow: 0 0 15px rgba(75, 199, 247, 0.3);
 }
 .planPopup__validity--current {
-    background: #d4effc;
-    color: #014a68;
+  border-color: #4bc7f7 !important; /* Sky blue border for current plan */
+  background-color: #f0faff; /* Light blue background */
+  box-shadow: 0 0 12px rgba(75, 199, 247, 0.4);
 }
 .planPopup__btn--current {
   background: #4bc7f7;
   color: #ffffff;
+  cursor: not-allowed
 }
 .planPopup__btn--current:hover {
   background: #2cb7f5;
+}
+/* --- Highlight the Current Plan distinctly --- */
+.planPopup__box--current {
+  border-color: #4bc7f7 !important;
+  box-shadow: 0 0 15px rgba(75, 199, 247, 0.3);
+}
+
+/* All non-current plans use yellow border */
+.planPopup__box--annual:not(.planPopup__box--current),
+.planPopup__box--semi_annual:not(.planPopup__box--current),
+.planPopup__box--monthly:not(.planPopup__box--current) {
+  border-color: #ffc107 !important;
+  box-shadow: none;
 }
 
 

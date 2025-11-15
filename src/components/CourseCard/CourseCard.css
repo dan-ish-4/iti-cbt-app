@@ -1,76 +1,104 @@
 .course-card {
   flex: 0 0 85%;
   max-width: 260px;
-  min-height: 420px; /* Adjusted height */
-  background-color: #b7f1cb; /* --color-card-course-bg */
+  min-height: 420px;
+  background-color: #b7f1cb;
   border-radius: 16px;
-  padding: 10px; /* --spacing-sm */
+  padding: 10px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,.08); /* --shadow-sm */
-  border: 1px solid #a0d9b0; /* --color-card-course-border */
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+  border: 1px solid #a0d9b0;
   position: relative;
   display: flex;
   flex-direction: column;
   transition: transform .3s ease, box-shadow .3s ease;
 }
+
 .course-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0,0,0,.12); /* --shadow-md-hover */
+  box-shadow: 0 15px 35px rgba(0,0,0,.12);
 }
+
+/* Style for purchased cards */
+.course-card.is-purchased {
+  background-color: #e3f2fd; /* A different color to distinguish it */
+  border-color: #90caf9;
+}
+
 .discount-badge {
   position: absolute;
   top: -10px;
   right: -10px;
   background: #ffd700;
   color: #000;
-  font-weight: 700; /* --font-weight-bold */
-  font-size: 14px; /* --font-size-sm */
+  font-weight: 700;
+  font-size: 14px;
   padding: 5px 12px;
-  border-radius: 40px; /* --border-radius-pill */
+  border-radius: 40px;
   z-index: 2;
 }
+
 .image-placeholder {
-  height: 180px; /* Adjusted height */
-  background-color: #42a5f5; /* --color-placeholder-bg */
+  height: 180px;
+  background-color: #42a5f5;
   background-size: cover;
   background-position: center;
-  border-radius: 10px; /* --border-radius-md */
-  margin-bottom: 15px; /* --spacing-md */
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
+
 .course-card h3 {
-  font-size: 16px; /* --font-size-md */
-  font-weight: 600; /* --font-weight-semibold */
+  font-size: 16px;
+  font-weight: 600;
   margin: 5px 0;
-  color: #2c3e50; /* --color-text-primary */
+  color: #2c3e50;
   min-height: 40px;
   overflow: hidden;
 }
+
 .course-card .desc {
-  font-size: 14px; /* --font-size-sm */
-  color: #333; /* --color-dark */
-  margin-bottom: 10px; /* --spacing-sm */
-  flex-grow: 1; /* Pushes price/button to the bottom */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  flex-grow: 1; /* Pushes footer to the bottom */
 }
+
+.purchased-details {
+  flex-grow: 1;
+  text-align: left;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+.purchased-details p {
+  margin: 4px 0;
+}
+
+.card-footer {
+  margin-top: auto; /* Pushes the footer to the bottom */
+}
+
 .price-container {
-    margin-top: auto; /* Pushes itself to the bottom */
+  margin-bottom: 15px;
 }
+
 .course-card .price {
-  font-size: 14px; /* --font-size-sm */
-  margin-bottom: 15px; /* --spacing-md */
+  font-size: 14px;
 }
+
 .course-card .old-price {
   text-decoration: line-through;
   color: #888;
-  margin-right: 5px; /* --spacing-xs */
+  margin-right: 5px;
 }
+
 .course-card .new-price {
-  font-weight: 700; /* --font-weight-bold */
+  font-weight: 700;
   color: #000;
 }
-.course-card .buy-btn {
-  background: #002a7f; /* --color-btn-buy-bg */
+
+.course-card .buy-btn,
+.course-card .upgrade-btn {
   padding: 10px 20px;
   font-size: 15px;
   border-radius: 12px;
@@ -79,7 +107,21 @@
   color: #fff;
   border: none;
   cursor: pointer;
+  width: 100%;
 }
+
+.course-card .buy-btn {
+  background: #002a7f;
+}
+
 .course-card .buy-btn:hover {
-  background: #001f5e; /* --color-btn-buy-hover-bg */
+  background: #001f5e;
+}
+
+.course-card .upgrade-btn {
+  background: #ff9800; /* Orange color for upgrade */
+}
+
+.course-card .upgrade-btn:hover {
+  background: #f57c00;
 }

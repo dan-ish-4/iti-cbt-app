@@ -12,6 +12,8 @@ const AvailableCourses = () => {
     const [error, setError] = useState('');
     const [isPlanPopupOpen, setIsPlanPopupOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
+    const [purchasedCourses, setPurchasedCourses] = useState([]);
+
 
     useEffect(() => {
         if (backendUserId) { // Check if the ID exists
@@ -38,30 +40,67 @@ const AvailableCourses = () => {
         }
     }, [backendUserId]); // Re-run if the ID changes
 
+
+    useEffect(() => {
+  if (!backendUserId) return;
+
+  backendFetch(`https://admin.online2study.in/api/user/courses/${backendUserId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.status && Array.isArray(data.data)) {
+        setPurchasedCourses(data.data);
+      } else {
+        setPurchasedCourses([]);
+      }
+    })
+    .catch(err => {
+      console.error("Purchased Course Fetch Error:", err);
+      setPurchasedCourses([]);
+    });
+}, [backendUserId]);
+
     const handleBuyNowClick = (course) => {
         setSelectedCourse(course);
         setIsPlanPopupOpen(true);
     };
-
+  const handleUpgradeClick = (purchasedCourse) => {
+    setSelectedCourse(purchasedCourse);
+    setIsPlanPopupOpen(true);
+  };
     const handleClosePlanPopup = () => {
         setIsPlanPopupOpen(false);
         setSelectedCourse(null);
     };
 
   const renderContent = () => {
-    if (isLoading) {
-      return <p className="status-message">Loading available courses...</p>;
-    }
-    if (error) {
-      return <p className="status-message">{error}</p>;
-    }
-    if (courses.length === 0) {
-      return <p className="status-message">No courses available at the moment.</p>;
-    }
-    return courses.map(course => (
-      <CourseCard key={course.id} course={course} onBuyNowClick={handleBuyNowClick} />
-    ));
-  };
+  if (isLoading) {
+    return <p className="status-message">Loading available courses...</p>;
+  }
+  if (error) {
+    return <p className="status-message">{error}</p>;
+  }
+  if (courses.length === 0) {
+    return <p className="status-message">No courses available at the moment.</p>;
+  }
+
+  return courses.map(course => {
+
+    // ⭐ Purchased detection
+  const purchasedInfo = purchasedCourses.find(
+  p => p.course_id === course.id
+) || null;
+
+    return (
+      <CourseCard
+        key={course.id}
+        course={course}
+        purchasedInfo={purchasedInfo}
+        onBuyNowClick={handleBuyNowClick}
+        onUpgradeClick={handleUpgradeClick}
+      />
+    );
+  });
+};
 
   return (
     <div className="courses__section">
@@ -84,3 +123,4 @@ const AvailableCourses = () => {
 };
 
 export default AvailableCourses;
+
