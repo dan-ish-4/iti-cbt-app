@@ -9,7 +9,7 @@ const AllTrades = () => {
   const [trades, setTrades] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTradeId, setSelectedTradeId] = useState(Number(localStorage.getItem('userTrade')) || null);
-
+  const [showAll, setShowAll] = useState(false);
   // 🔹 Load trades based on user language
   useEffect(() => {
     if (!backendUserId) {
@@ -53,7 +53,8 @@ const AllTrades = () => {
   const renderContent = () => {
     if (isLoading) return <p className="status-message">Loading trades...</p>;
     if (trades.length === 0) return <p className="status-message">No trades found.</p>;
-    return trades.map(trade => (
+    const visibleTrade = showAll ? trades : trades.slice(0,6);
+    return visibleTrade.map(trade => (
       <div
         key={trade.id}
         className={`trade-card-wrapper ${trade.id === selectedTradeId ? 'selected-trade' : ''}`}
@@ -71,7 +72,7 @@ const AllTrades = () => {
       <div className="courses-box trades-list-box">
         <div className="courses-header">
           <h2>All Trades</h2>
-          <a href="#">View all</a>
+          <button className='view-all-btn'onClick={()=>setShowAll(prev=> !prev)}>{showAll ? "Show Less" : "View All"}</button>
         </div>
         <div className="trades-grid-container" id="TradesList">
           {renderContent()}
