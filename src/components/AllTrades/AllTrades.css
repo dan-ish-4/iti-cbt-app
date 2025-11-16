@@ -48,10 +48,10 @@
 .view-all-btn {
   background: none;
   border: none;
-  color: #007bff;
+  color: #007bff; 
   cursor: pointer;
   font-weight: 600;
-  padding: 5px 0;
+  padding: 5px 10px;
 }
 
 

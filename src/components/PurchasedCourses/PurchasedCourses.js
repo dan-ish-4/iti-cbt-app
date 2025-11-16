@@ -5,6 +5,7 @@ import PurchasedCourseCard from '../PurchasedCourseCard/PurchasedCourseCard';
 import { useAuth } from '../../context/AuthContext';
 import { backendFetch } from '../../utils/backendFetch';
 
+
 const PurchasedCourses = () => {
     const { backendUserId } = useAuth(); // Get the ID from context
     const [courses, setCourses] = useState([]);
@@ -12,6 +13,8 @@ const PurchasedCourses = () => {
     const [error, setError] = useState('');
     const [isPlanPopupOpen, setIsPlanPopupOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
+    const [viewButton , setViewButton] = useState(false);
+  
 
     useEffect(() => {
         if (backendUserId) { // Check if the ID exists
@@ -56,17 +59,17 @@ const PurchasedCourses = () => {
     if (courses.length === 0) {
       return <p className="status-message">No purchased courses found.</p>;
     }
+    const visibleView = viewButton ? courses : courses.slice(0,4);
     return courses.map(course => (
       <PurchasedCourseCard key={course.id || course.course_id} course={course} onUpgradeClick={handleUpgradeClick} />
     ));
   };
-
   return (
     <div className="courses__section">
-      <div className="courses-box">
+      <div className="courses-box">A
         <div className="courses-header">
           <h2>Purchased Courses</h2>
-          <a href="#">View all</a>
+         <button className='view-all-btn' onClick={()=> prev => !prev}>{viewButton ? "Show Less" : "View All"}</button>
         </div>
         <div className="courses-list-container" id="PurchasedList">
           {renderContent()}
